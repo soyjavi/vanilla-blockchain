@@ -1,0 +1,41 @@
+{
+  "name": "vanillachain-core",
+  "version": "0.1.0",
+  "description": "A distributed database that maintains a continuously growing list of ordered records.",
+  "keywords": [
+    "blockchain",
+    "store",
+    "bitcoin",
+    "crypto",
+    "crypto",
+    "sha256",
+    "terminal",
+    "tool"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/soyjavi/vanillachain-core.git"
+  },
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "bin": "./dist/index.js",
+  "homepage": "https://github.com/soyjavi/vanillachain-core",
+  "bugs": "https://github.com/soyjavi/vanillachain-core/issues",
+  "dependencies": {
+    "crypto-js": "3.1.9-1",
+    "lowdb": "1.0.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "eslint": "^5.8.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "jest": "23.6.0"
+  },
+  "scripts": {
+    "build": "babel src -d dist",
+    "test": "jest src/**",
+    "lint": "eslint src/**.js"
+  }
+}
