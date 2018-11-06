@@ -1,15 +1,22 @@
-import { calculateHash } from './modules';
+import { calculateHash, encrypt } from './modules';
 
 export default class Block {
   constructor({
-    data = {}, difficulty, previousHash, timestamp = new Date().toISOString(),
+    data = {},
+    difficulty,
+    previousHash,
+    timestamp = new Date().toISOString(),
+    secret,
   } = {}) {
     this.data = data;
+    this.data = secret ? encrypt(data, secret) : data;
     this.nonce = 0;
     this.previousHash = previousHash;
     this.timestamp = timestamp;
 
     if (difficulty) this.mine(difficulty);
+
+    return this;
   }
 
   mine(difficulty = 0) {

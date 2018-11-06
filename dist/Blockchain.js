@@ -30,20 +30,22 @@ var Blockchain = function () {
         _ref$keyChain = _ref.keyChain,
         keyChain = _ref$keyChain === undefined ? 'coin' : _ref$keyChain,
         _ref$readMode = _ref.readMode,
-        readMode = _ref$readMode === undefined ? false : _ref$readMode;
+        readMode = _ref$readMode === undefined ? false : _ref$readMode,
+        secret = _ref.secret;
 
     _classCallCheck(this, Blockchain);
+
+    var _ref2 = new _Store2.default({
+      file: file, keyChain: keyChain, difficulty: difficulty, readMode: readMode, secret: secret
+    }),
+        store = _ref2.store,
+        _ref2$chain = _ref2.chain,
+        chain = _ref2$chain === undefined ? [] : _ref2$chain;
 
     this.file = file;
     this.keyChain = keyChain;
     this.difficulty = difficulty;
     this.readMode = readMode;
-
-    var _ref2 = new _Store2.default(this),
-        store = _ref2.store,
-        _ref2$chain = _ref2.chain,
-        chain = _ref2$chain === undefined ? [] : _ref2$chain;
-
     this.store = store;
     this.chain = chain;
   }
@@ -53,6 +55,7 @@ var Blockchain = function () {
     value: function addBlock() {
       var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var previousHash = arguments[1];
+      var secret = arguments[2];
       var difficulty = this.difficulty,
           keyChain = this.keyChain,
           latestBlock = this.latestBlock,
@@ -63,7 +66,9 @@ var Blockchain = function () {
       if (readMode) throw Error('The ' + keyChain + ' is in read mode only.');
       if (previousHash !== latestBlock.hash) throw Error('The previous hash is not valid.');
 
-      var newBlock = new _Block2.default({ data: data, previousHash: previousHash, difficulty: difficulty });
+      var newBlock = new _Block2.default({
+        data: data, previousHash: previousHash, difficulty: difficulty, secret: secret
+      });
       store.get(keyChain).push(newBlock).write();
 
       return newBlock;

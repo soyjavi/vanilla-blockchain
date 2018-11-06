@@ -18,16 +18,20 @@ var Block = function () {
         difficulty = _ref.difficulty,
         previousHash = _ref.previousHash,
         _ref$timestamp = _ref.timestamp,
-        timestamp = _ref$timestamp === undefined ? new Date().toISOString() : _ref$timestamp;
+        timestamp = _ref$timestamp === undefined ? new Date().toISOString() : _ref$timestamp,
+        secret = _ref.secret;
 
     _classCallCheck(this, Block);
 
     this.data = data;
+    this.data = secret ? (0, _modules.encrypt)(data, secret) : data;
     this.nonce = 0;
     this.previousHash = previousHash;
     this.timestamp = timestamp;
 
     if (difficulty) this.mine(difficulty);
+
+    return this;
   }
 
   _createClass(Block, [{

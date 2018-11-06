@@ -1,5 +1,5 @@
 # vanillachain-core
-[![npm](https://img.shields.io/npm/v/vanillachain.svg?style=flat-square)](https://www.npmjs.com/package/vanillachain-core)
+[![npm](https://img.shields.io/npm/v/vanillachain-core.svg?style=flat-square)](https://www.npmjs.com/package/vanillachain-core)
 [![Build Status](http://img.shields.io/travis/soyjavi/vanillachain-core/master.svg?style=flat-square)](https://travis-ci.org/soyjavi/vanillachain-core)
 [![dependencies Status](https://david-dm.org/soyjavi/vanillachain-core/status.svg?style=flat-square)](https://david-dm.org/soyjavi/vanillachain-core)
 [![devDependencies Status](https://david-dm.org/soyjavi/vanillachain-core/dev-status.svg?style=flat-square)](https://david-dm.org/soyjavi/vanillachain-core?type=dev)
@@ -87,67 +87,15 @@ mine(difficulty = 0) {
 }
 ```
 
-
 ## Getting Started
 
-### Configure your environment
+### Build your own Blockchain
 The easiest way for choose your kind of instance is creating a `.env` file in the root of the project. You just to choose the kind of *instance* and its *port* of running.
 
 ```
-# Instance configuration
-INSTANCE=network
-PORT=3000
+const blockchain = new Blockchain();
+const  { hash: previousHash } = blockchain.latestBlock;
 
-# Network address
-NETWORK=http://localhost:3000
-```
-
-
-## `Commands`
-
-#### Start the *network* instance (for now we need a broadcasting system)
-```
-PORT=3000 INSTANCE=network yarn start
-```
-
-#### Start some *peer* instances
-```
-PORT=3001 INSTANCE=peer yarn start
-PORT=3002 INSTANCE=peer yarn start
-PORT=3003 INSTANCE=peer yarn start
-```
-
-#### Store a new block in an specific *peer*
-
-We should send a object with:
-
-```
-{
-  data: {...}         // The data you wanna keep in the blockchain
-  file: 'vanilla', // The name of the store
-  keyChain: 'myChain', // The key of your blockchain you wanna use inside your store.
-  previousHash: '..', // The last block hash
-}
-```
-
-```
-curl -H "Content-type:application/json" --data '{"file": "vanilla", "keyChain": "myChain", "data" : "Some data to the first block", "previousHash": "03407ea4418f161744ecc811816530f0dc3b345fc9af6841427f831e3afb46db"}' http://localhost:3001/block
-```
-
-#### Mine a new block in an specific *peer*
-
-If you wanna just *mine* a block and not store it in your blockchain:
-
-```
-curl -H "Content-type:application/json" --data '{"file": "vanilla", "keyChain": "myChain", "data" : "Some data to the first block", "previousHash": "03407ea4418f161744ecc811816530f0dc3b345fc9af6841427f831e3afb46db"}' http://localhost:3001/block/mine
-```
-
-#### Get the last block mined in an specific *peer*
-```
-curl -G 'http://localhost:3001/block/last' -d 'file=vanilla&keyChain=myChain'
-```
-
-#### Send to all peers a block to mine
-```
-curl -H "Content-type:application/json" --data '{"data" : "Some data to the first block"}' http://localhost:3000/mine/block
+const data = { hello: 'world' };
+blockchain.addBlock(data, previousHash);
 ```

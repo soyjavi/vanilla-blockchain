@@ -4,19 +4,25 @@ import { isValidChain } from './modules';
 
 export default class Blockchain {
   constructor({
-    difficulty = 1, file = 'vanillachain', keyChain = 'coin', readMode = false,
+    difficulty = 1,
+    file = 'vanillachain',
+    keyChain = 'coin',
+    readMode = false,
+    secret,
   } = {}) {
+    const { store, chain = [] } = new Store({
+      file, keyChain, difficulty, readMode, secret,
+    });
+
     this.file = file;
     this.keyChain = keyChain;
     this.difficulty = difficulty;
     this.readMode = readMode;
-
-    const { store, chain = [] } = new Store(this);
     this.store = store;
     this.chain = chain;
   }
 
-  addBlock(data = {}, previousHash) {
+  addBlock(data = {}, previousHash, secret) {
     const {
       difficulty, keyChain, latestBlock, readMode, store,
     } = this;
@@ -24,7 +30,9 @@ export default class Blockchain {
     if (readMode) throw Error(`The ${keyChain} is in read mode only.`);
     if (previousHash !== latestBlock.hash) throw Error('The previous hash is not valid.');
 
-    const newBlock = new Block({ data, previousHash, difficulty });
+    const newBlock = new Block({
+      data, previousHash, difficulty, secret,
+    });
     store.get(keyChain).push(newBlock).write();
 
     return newBlock;

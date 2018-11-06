@@ -3,10 +3,10 @@ import FileSync from 'lowdb/adapters/FileSync';
 import path from 'path';
 import fs from 'fs';
 
-import Block from '../Block'; // @TODO: Decouple
+import Block from './Block';
 
 export default ({
-  difficulty, file, keyChain, readMode,
+  difficulty, file, keyChain, readMode, secret,
 }) => {
   const folder = path.resolve('.', 'store');
   if (!fs.existsSync(folder) && !readMode) fs.mkdirSync(folder);
@@ -18,7 +18,7 @@ export default ({
   if (!store.has(keyChain).value()) {
     if (readMode) throw Error(`Blockchain ${keyChain} doesn't exists.`);
     store
-      .set(keyChain, [new Block({ data: 'Genesis Block', difficulty, index: 0 })])
+      .set(keyChain, [new Block({ data: 'Genesis Block', difficulty, secret })])
       .write();
   }
 

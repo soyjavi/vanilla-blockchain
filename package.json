@@ -1,16 +1,15 @@
 {
   "name": "vanillachain-core",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A distributed database that maintains a continuously growing list of ordered records.",
   "keywords": [
     "blockchain",
     "store",
     "bitcoin",
     "crypto",
-    "crypto",
+    "aes",
     "sha256",
-    "terminal",
-    "tool"
+    "lowdb"
   ],
   "repository": {
     "type": "git",

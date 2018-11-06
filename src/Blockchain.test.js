@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
+import { decrypt } from './modules';
 import Blockchain from './Blockchain';
 
 const DEFAULT_FILE = 'vanillachain';
@@ -9,6 +10,7 @@ const DEFAULT_DIFFICULTY = 1;
 const file = 'demo';
 const keyChain = 'demo';
 const difficulty = 3;
+const secret = 'salt_and_pepper';
 
 describe('Blockchain', () => {
   beforeEach(() => {
@@ -53,6 +55,14 @@ describe('Blockchain', () => {
     expect(blockchain).toBeDefined();
     expect(blockchain.difficulty).toEqual(difficulty);
     expect(blockchain.chain[0].hash.substring(0, difficulty)).toEqual(Array(difficulty + 1).join('0'));
+  });
+
+  it('when { secret }', () => {
+    const blockchain = new Blockchain({ secret });
+
+    expect(blockchain).toBeDefined();
+    const firstBlock = blockchain.chain[0];
+    expect(decrypt(firstBlock.data, secret)).toEqual('Genesis Block');
   });
 
   it('when { readMode } and file not exists.', () => {
