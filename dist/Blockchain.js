@@ -20,6 +20,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var state = new WeakMap();
+
 var Blockchain = function () {
   function Blockchain() {
     var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
@@ -37,18 +39,19 @@ var Blockchain = function () {
 
     var _ref2 = new _Store2.default({ file: file, keyChain: keyChain, readMode: readMode }),
         store = _ref2.store,
-        _ref2$chain = _ref2.chain,
-        chain = _ref2$chain === undefined ? [] : _ref2$chain;
+        _ref2$blocks = _ref2.blocks,
+        blocks = _ref2$blocks === undefined ? [] : _ref2$blocks;
 
-    this.file = file;
-    this.keyChain = keyChain;
-    this.difficulty = difficulty;
-    this.readMode = readMode;
-    this.store = store;
-    this.chain = chain;
-    this.secret = secret;
+    state.set(this, {
+      difficulty: difficulty,
+      keyChain: keyChain,
+      readMode: readMode,
+      secret: secret,
+      store: store,
+      blocks: blocks
+    });
 
-    if (chain.length === 0) this.addBlock('Genesis Block');
+    if (blocks.length === 0) this.addBlock('Genesis Block');
 
     return this;
   }
@@ -58,13 +61,14 @@ var Blockchain = function () {
     value: function addBlock() {
       var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var previousHash = arguments[1];
-      var difficulty = this.difficulty,
-          keyChain = this.keyChain,
-          latestBlock = this.latestBlock,
-          readMode = this.readMode,
-          store = this.store,
-          secret = this.secret;
+      var latestBlock = this.latestBlock;
 
+      var _state$get = state.get(this),
+          difficulty = _state$get.difficulty,
+          keyChain = _state$get.keyChain,
+          readMode = _state$get.readMode,
+          secret = _state$get.secret,
+          store = _state$get.store;
 
       if (readMode) throw Error('The ' + keyChain + ' is in read mode only.');
       if (previousHash !== latestBlock.hash) throw Error('The previous hash is not valid.');
@@ -75,23 +79,35 @@ var Blockchain = function () {
       return newBlock;
     }
   }, {
+    key: 'blocks',
+    get: function get() {
+      var _state$get2 = state.get(this),
+          blocks = _state$get2.blocks;
+
+      // @TODO: We should decrypt
+
+
+      return blocks;
+    }
+  }, {
     key: 'latestBlock',
     get: function get() {
-      var chain = this.chain,
-          secret = this.secret;
+      var _state$get3 = state.get(this),
+          blocks = _state$get3.blocks,
+          secret = _state$get3.secret;
 
-      var block = chain[chain.length - 1];
+      var block = blocks[blocks.length - 1];
 
       return block ? (0, _modules.decrypt)(block, secret) : {};
     }
   }, {
     key: 'isValidChain',
     get: function get() {
-      var chain = this.chain,
-          secret = this.secret;
+      var _state$get4 = state.get(this),
+          blocks = _state$get4.blocks,
+          secret = _state$get4.secret;
 
-
-      return (0, _modules.isValidChain)(chain, secret);
+      return (0, _modules.isValidChain)(blocks, secret);
     }
   }]);
 

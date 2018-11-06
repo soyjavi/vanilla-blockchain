@@ -2,6 +2,8 @@ import Block from './Block';
 import Store from './Store';
 import { decrypt, encrypt, isValidChain } from './modules';
 
+const state = new WeakMap();
+
 export default class Blockchain {
   constructor({
     difficulty = 1,
@@ -10,25 +12,27 @@ export default class Blockchain {
     readMode = false,
     secret,
   } = {}) {
-    const { store, chain = [] } = new Store({ file, keyChain, readMode });
+    const { store, blocks = [] } = new Store({ file, keyChain, readMode });
 
-    this.file = file;
-    this.keyChain = keyChain;
-    this.difficulty = difficulty;
-    this.readMode = readMode;
-    this.store = store;
-    this.chain = chain;
-    this.secret = secret;
+    state.set(this, {
+      difficulty,
+      keyChain,
+      readMode,
+      secret,
+      store,
+      blocks,
+    });
 
-    if (chain.length === 0) this.addBlock('Genesis Block');
+    if (blocks.length === 0) this.addBlock('Genesis Block');
 
     return this;
   }
 
   addBlock(data = {}, previousHash) {
+    const { latestBlock } = this;
     const {
-      difficulty, keyChain, latestBlock, readMode, store, secret,
-    } = this;
+      difficulty, keyChain, readMode, secret, store,
+    } = state.get(this);
 
     if (readMode) throw Error(`The ${keyChain} is in read mode only.`);
     if (previousHash !== latestBlock.hash) throw Error('The previous hash is not valid.');
@@ -39,16 +43,23 @@ export default class Blockchain {
     return newBlock;
   }
 
+  get blocks() {
+    const { blocks } = state.get(this);
+
+    // @TODO: We should decrypt
+    return blocks;
+  }
+
   get latestBlock() {
-    const { chain, secret } = this;
-    const block = chain[chain.length - 1];
+    const { blocks, secret } = state.get(this);
+    const block = blocks[blocks.length - 1];
 
     return block ? decrypt(block, secret) : {};
   }
 
   get isValidChain() {
-    const { chain, secret } = this;
+    const { blocks, secret } = state.get(this);
 
-    return isValidChain(chain, secret);
+    return isValidChain(blocks, secret);
   }
 }

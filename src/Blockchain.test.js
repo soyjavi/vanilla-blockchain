@@ -22,47 +22,40 @@ describe('Blockchain', () => {
   it('default', () => {
     const blockchain = new Blockchain();
 
-    expect(Object.keys(blockchain)).toEqual(['file', 'keyChain', 'difficulty', 'readMode', 'store', 'chain', 'secret']);
-
-    expect(blockchain.file).toEqual(DEFAULT_FILE);
-    expect(blockchain.keyChain).toEqual(DEFAULT_COIN);
-    expect(blockchain.difficulty).toEqual(DEFAULT_DIFFICULTY);
-    expect(blockchain.readMode).toEqual(false);
-    expect(blockchain.chain.length).toEqual(1);
-
-    const firstBlock = blockchain.chain[0];
-    expect(firstBlock.data).toEqual('Genesis Block');
+    expect(Object.keys(blockchain)).toEqual([]);
+    expect(blockchain.blocks.length).toEqual(1);
+    const [genesisBlock] = blockchain.blocks;
+    expect(genesisBlock.data).toEqual('Genesis Block');
   });
 
   it('when { file }', () => {
     const blockchain = new Blockchain({ file });
 
     expect(blockchain).toBeDefined();
-    expect(blockchain.file).toEqual(file);
+    expect(fs.existsSync(path.resolve('.', 'store'), `{file}.json`)).toEqual(true);
   });
 
   it('when { keyChain }', () => {
     const blockchain = new Blockchain({ keyChain });
 
     expect(blockchain).toBeDefined();
-    expect(blockchain.file).toEqual(DEFAULT_FILE);
-    expect(blockchain.keyChain).toEqual(keyChain);
+    // expect(blockchain.file).toEqual(DEFAULT_FILE);
+    // expect(blockchain.keyChain).toEqual(keyChain);
   });
 
   it('when { difficulty }', () => {
     const blockchain = new Blockchain({ difficulty });
 
     expect(blockchain).toBeDefined();
-    expect(blockchain.difficulty).toEqual(difficulty);
-    expect(blockchain.chain[0].hash.substring(0, difficulty)).toEqual(Array(difficulty + 1).join('0'));
+    expect(blockchain.blocks[0].hash.substring(0, difficulty)).toEqual(Array(difficulty + 1).join('0'));
   });
 
   it('when { secret }', () => {
     const blockchain = new Blockchain({ secret });
 
     expect(blockchain).toBeDefined();
-    const genesisBlock = decrypt(blockchain.chain[0], secret);
-    expect(genesisBlock.data).toEqual('Genesis Block');
+    const { latestBlock } = blockchain;
+    expect(latestBlock.data).toEqual('Genesis Block');
   });
 
   it('when { readMode } & file not exists.', () => {
@@ -77,6 +70,12 @@ describe('Blockchain', () => {
     expect(() => {
       new Blockchain({ keyChain, readMode: true });
     }).toThrowError(`Blockchain ${keyChain} doesn't exists.`)
+  });
+
+  it('.blocks', () => {
+    const blockchain = new Blockchain({ keyChain });
+
+    expect(blockchain.blocks.length).toEqual(1);
   });
 
   it('.latestBlock', () => {
@@ -102,6 +101,7 @@ describe('Blockchain', () => {
       data, hash, nonce, previousHash, timestamp,
     } = blockchain.latestBlock;
 
+    expect(blockchain.blocks.length).toEqual(2);
     expect(data).toEqual(newData);
     expect(hash.length).toEqual(64);
     expect(nonce).toBeDefined();

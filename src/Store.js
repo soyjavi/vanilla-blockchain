@@ -20,6 +20,6 @@ export default ({ file, keyChain, readMode }) => {
 
   return {
     store,
-    chain: store.get(keyChain).value(),
+    blocks: store.get(keyChain).value(),
   };
 };

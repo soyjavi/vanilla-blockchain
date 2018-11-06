@@ -41,6 +41,6 @@ exports.default = function (_ref) {
 
   return {
     store: store,
-    chain: store.get(keyChain).value()
+    blocks: store.get(keyChain).value()
   };
 };
