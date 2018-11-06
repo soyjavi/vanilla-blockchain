@@ -1,6 +1,6 @@
 import Block from './Block';
 import Store from './Store';
-import { isValidChain } from './modules';
+import { decrypt, encrypt, isValidChain } from './modules';
 
 export default class Blockchain {
   constructor({
@@ -10,9 +10,7 @@ export default class Blockchain {
     readMode = false,
     secret,
   } = {}) {
-    const { store, chain = [] } = new Store({
-      file, keyChain, difficulty, readMode, secret,
-    });
+    const { store, chain = [] } = new Store({ file, keyChain, readMode });
 
     this.file = file;
     this.keyChain = keyChain;
@@ -20,29 +18,37 @@ export default class Blockchain {
     this.readMode = readMode;
     this.store = store;
     this.chain = chain;
+    this.secret = secret;
+
+    if (chain.length === 0) this.addBlock('Genesis Block');
+
+    return this;
   }
 
-  addBlock(data = {}, previousHash, secret) {
+  addBlock(data = {}, previousHash) {
     const {
-      difficulty, keyChain, latestBlock, readMode, store,
+      difficulty, keyChain, latestBlock, readMode, store, secret,
     } = this;
 
     if (readMode) throw Error(`The ${keyChain} is in read mode only.`);
     if (previousHash !== latestBlock.hash) throw Error('The previous hash is not valid.');
 
-    const newBlock = new Block({
-      data, previousHash, difficulty, secret,
-    });
-    store.get(keyChain).push(newBlock).write();
+    const newBlock = new Block({ data, previousHash, difficulty });
+    store.get(keyChain).push(encrypt(newBlock, secret)).write();
 
     return newBlock;
   }
 
   get latestBlock() {
-    return this.chain[this.chain.length - 1];
+    const { chain, secret } = this;
+    const block = chain[chain.length - 1];
+
+    return block ? decrypt(block, secret) : {};
   }
 
   get isValidChain() {
-    return isValidChain(this.chain);
+    const { chain, secret } = this;
+
+    return isValidChain(chain, secret);
   }
 }

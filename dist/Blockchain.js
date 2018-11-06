@@ -35,9 +35,7 @@ var Blockchain = function () {
 
     _classCallCheck(this, Blockchain);
 
-    var _ref2 = new _Store2.default({
-      file: file, keyChain: keyChain, difficulty: difficulty, readMode: readMode, secret: secret
-    }),
+    var _ref2 = new _Store2.default({ file: file, keyChain: keyChain, readMode: readMode }),
         store = _ref2.store,
         _ref2$chain = _ref2.chain,
         chain = _ref2$chain === undefined ? [] : _ref2$chain;
@@ -48,6 +46,11 @@ var Blockchain = function () {
     this.readMode = readMode;
     this.store = store;
     this.chain = chain;
+    this.secret = secret;
+
+    if (chain.length === 0) this.addBlock('Genesis Block');
+
+    return this;
   }
 
   _createClass(Blockchain, [{
@@ -55,33 +58,40 @@ var Blockchain = function () {
     value: function addBlock() {
       var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var previousHash = arguments[1];
-      var secret = arguments[2];
       var difficulty = this.difficulty,
           keyChain = this.keyChain,
           latestBlock = this.latestBlock,
           readMode = this.readMode,
-          store = this.store;
+          store = this.store,
+          secret = this.secret;
 
 
       if (readMode) throw Error('The ' + keyChain + ' is in read mode only.');
       if (previousHash !== latestBlock.hash) throw Error('The previous hash is not valid.');
 
-      var newBlock = new _Block2.default({
-        data: data, previousHash: previousHash, difficulty: difficulty, secret: secret
-      });
-      store.get(keyChain).push(newBlock).write();
+      var newBlock = new _Block2.default({ data: data, previousHash: previousHash, difficulty: difficulty });
+      store.get(keyChain).push((0, _modules.encrypt)(newBlock, secret)).write();
 
       return newBlock;
     }
   }, {
     key: 'latestBlock',
     get: function get() {
-      return this.chain[this.chain.length - 1];
+      var chain = this.chain,
+          secret = this.secret;
+
+      var block = chain[chain.length - 1];
+
+      return block ? (0, _modules.decrypt)(block, secret) : {};
     }
   }, {
     key: 'isValidChain',
     get: function get() {
-      return (0, _modules.isValidChain)(this.chain);
+      var chain = this.chain,
+          secret = this.secret;
+
+
+      return (0, _modules.isValidChain)(chain, secret);
     }
   }]);
 

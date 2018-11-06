@@ -9,7 +9,7 @@ describe('Block', () => {
   it('default', () => {
     const block = new Block();
 
-    expect(Object.keys(block)).toEqual(['data', 'nonce', 'previousHash', 'timestamp']);
+    expect(Object.keys(block)).toEqual(['data', 'nonce', 'previousHash', 'timestamp', 'hash']);
 
     expect(block.data).toEqual({});
     expect(block.nonce).toEqual(0);
@@ -30,32 +30,11 @@ describe('Block', () => {
   });
 
   it('when difficulty', () => {
-    const block = new Block({ data, previousHash, difficulty: 1 });
+    const block = new Block({ data, previousHash, difficulty: 2 });
 
     expect(Object.keys(block)).toEqual(['data', 'nonce', 'previousHash', 'timestamp', 'hash']);
     expect(block.hash).toBeDefined();
-    expect(block.hash.length).toEqual(64);
-  });
-
-  it('when secret', () => {
-    const block = new Block({
-      data, previousHash, difficulty: 1, secret,
-    });
-
-    expect(Object.keys(block)).toEqual(['data', 'nonce', 'previousHash', 'timestamp', 'hash']);
-    expect(block.hash).toBeDefined();
-    expect(block.hash.length).toEqual(64);
-    expect(decrypt(block.data, secret)).toEqual(data);
-  });
-
-  it('using mine()', () => {
-    const block = new Block({ data, previousHash });
-
-    expect(Object.keys(block)).toEqual(['data', 'nonce', 'previousHash', 'timestamp']);
-    expect(block.hash).not;
-    block.mine();
-    expect(Object.keys(block)).toEqual(['data', 'nonce', 'previousHash', 'timestamp', 'hash']);
-    expect(block.hash).toBeDefined();
+    expect(block.hash.substring(0, 2)).toEqual('00');
     expect(block.hash.length).toEqual(64);
   });
 });

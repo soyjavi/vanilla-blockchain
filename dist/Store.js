@@ -20,18 +20,12 @@ var _fs = require('fs');
 
 var _fs2 = _interopRequireDefault(_fs);
 
-var _Block = require('./Block');
-
-var _Block2 = _interopRequireDefault(_Block);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = function (_ref) {
-  var difficulty = _ref.difficulty,
-      file = _ref.file,
+  var file = _ref.file,
       keyChain = _ref.keyChain,
-      readMode = _ref.readMode,
-      secret = _ref.secret;
+      readMode = _ref.readMode;
 
   var folder = _path2.default.resolve('.', 'store');
   if (!_fs2.default.existsSync(folder) && !readMode) _fs2.default.mkdirSync(folder);
@@ -42,7 +36,7 @@ exports.default = function (_ref) {
   var store = (0, _lowdb2.default)(new _FileSync2.default(storeFile));
   if (!store.has(keyChain).value()) {
     if (readMode) throw Error('Blockchain ' + keyChain + ' doesn\'t exists.');
-    store.set(keyChain, [new _Block2.default({ data: 'Genesis Block', difficulty: difficulty, secret: secret })]).write();
+    store.set(keyChain, []).write();
   }
 
   return {
