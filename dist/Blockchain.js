@@ -34,12 +34,13 @@ var state = new WeakMap();
 var Blockchain = function () {
   function Blockchain() {
     var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+        _ref$autoSave = _ref.autoSave,
+        autoSave = _ref$autoSave === undefined ? true : _ref$autoSave,
         _ref$difficulty = _ref.difficulty,
         difficulty = _ref$difficulty === undefined ? 1 : _ref$difficulty,
         _ref$file = _ref.file,
         file = _ref$file === undefined ? 'vanillachain' : _ref$file,
-        _ref$keyChain = _ref.keyChain,
-        keyChain = _ref$keyChain === undefined ? 'coin' : _ref$keyChain,
+        key = _ref.key,
         _ref$readMode = _ref.readMode,
         readMode = _ref$readMode === undefined ? false : _ref$readMode,
         secret = _ref.secret;
@@ -50,17 +51,18 @@ var Blockchain = function () {
 
     if (!_fs2.default.existsSync(filename) && readMode) throw Error('File ' + file + ' doesn\'t exists.');
 
-    var store = new _Store2.default({ filename: filename });
+    var store = new _Store2.default({ autoSave: autoSave, filename: filename });
 
     state.set(this, {
+      autoSave: autoSave,
       difficulty: difficulty,
-      keyChain: keyChain,
+      key: key,
       readMode: readMode,
       secret: secret,
       store: store
     });
 
-    if (!store.get(keyChain).value) this.addBlock('Genesis Block');
+    if (!store.get(key).value) this.addBlock('Genesis Block');
 
     return this;
   }
@@ -73,37 +75,51 @@ var Blockchain = function () {
       var latestBlock = this.latestBlock;
 
       var _state$get = state.get(this),
+          autoSave = _state$get.autoSave,
           difficulty = _state$get.difficulty,
-          keyChain = _state$get.keyChain,
+          key = _state$get.key,
           readMode = _state$get.readMode,
           secret = _state$get.secret,
           store = _state$get.store;
 
-      if (readMode) throw Error(keyChain + ' is in read mode only.');else if (previousHash !== latestBlock.hash) throw Error('The previous hash is not valid.');
+      if (readMode) throw Error('Read mode only.');else if (previousHash !== latestBlock.hash) throw Error('The previous hash is not valid.');
 
       var newBlock = new _Block2.default({ data: data, previousHash: previousHash, difficulty: difficulty });
-      store.get(keyChain).push((0, _modules.encrypt)(newBlock, secret)).save();
+      store.get(key).push((0, _modules.encrypt)(newBlock, secret));
+
+      if (autoSave) store.save();
 
       return newBlock;
     }
   }, {
+    key: 'save',
+    value: function save() {
+      var _state$get2 = state.get(this),
+          store = _state$get2.store;
+
+      store.save();
+    }
+  }, {
     key: 'blocks',
     get: function get() {
-      var _state$get2 = state.get(this),
-          value = _state$get2.store.value;
+      var _state$get3 = state.get(this),
+          secret = _state$get3.secret,
+          value = _state$get3.store.value;
 
-      // @TODO: We should decrypt
+      // return secret ? decrypt(value, secret) : value;
 
 
-      return value;
+      return secret ? value.map(function (item) {
+        return (0, _modules.decrypt)(item, secret);
+      }) : value;
     }
   }, {
     key: 'latestBlock',
     get: function get() {
-      var _state$get3 = state.get(this),
-          _state$get3$store$val = _state$get3.store.value,
-          blocks = _state$get3$store$val === undefined ? [] : _state$get3$store$val,
-          secret = _state$get3.secret;
+      var _state$get4 = state.get(this),
+          _state$get4$store$val = _state$get4.store.value,
+          blocks = _state$get4$store$val === undefined ? [] : _state$get4$store$val,
+          secret = _state$get4.secret;
 
       var block = blocks[blocks.length - 1];
 
@@ -112,10 +128,10 @@ var Blockchain = function () {
   }, {
     key: 'isValidChain',
     get: function get() {
-      var _state$get4 = state.get(this),
-          _state$get4$store$val = _state$get4.store.value,
-          blocks = _state$get4$store$val === undefined ? [] : _state$get4$store$val,
-          secret = _state$get4.secret;
+      var _state$get5 = state.get(this),
+          _state$get5$store$val = _state$get5.store.value,
+          blocks = _state$get5$store$val === undefined ? [] : _state$get5$store$val,
+          secret = _state$get5.secret;
 
       return (0, _modules.isValidChain)(blocks, secret);
     }

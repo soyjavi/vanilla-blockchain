@@ -8,7 +8,7 @@ const DEFAULT_FILE = 'vanillachain';
 const DEFAULT_COIN = 'coin';
 const DEFAULT_DIFFICULTY = 1;
 const file = 'vanillachain_2';
-const keyChain = 'demo';
+const key = 'demo';
 const difficulty = 3;
 const secret = 'salt_and_pepper';
 
@@ -35,8 +35,8 @@ describe('Blockchain', () => {
     expect(fs.existsSync(path.resolve('.', 'store'), `{file}.json`)).toEqual(true);
   });
 
-  it('when { keyChain }', () => {
-    const blockchain = new Blockchain({ keyChain });
+  it('when { key }', () => {
+    const blockchain = new Blockchain({ key });
 
     expect(blockchain).toBeDefined();
     expect(blockchain.latestBlock).toBeDefined();
@@ -64,13 +64,21 @@ describe('Blockchain', () => {
   });
 
   it('.blocks', () => {
-    const blockchain = new Blockchain({ keyChain });
+    const blockchain = new Blockchain({ key });
 
     expect(blockchain.blocks.length).toEqual(1);
+    expect(blockchain.blocks[0].data).toEqual('Genesis Block');
+  });
+
+   it('when { secret } & .blocks', () => {
+    const blockchain = new Blockchain({ key, secret });
+
+    expect(blockchain.blocks.length).toEqual(1);
+    expect(blockchain.blocks[0].data).toEqual('Genesis Block');
   });
 
   it('.latestBlock', () => {
-    const blockchain = new Blockchain({ keyChain });
+    const blockchain = new Blockchain({ key });
     const {
       data, hash, nonce, previousHash, timestamp,
     } = blockchain.latestBlock;
@@ -104,6 +112,18 @@ describe('Blockchain', () => {
     }).toThrowError(`The previous hash is not valid.`)
   });
 
+  it('when { autoSave } & .addBlock()', () => {
+    const blockchain = new Blockchain({ autoSave: false });
+
+    const { hash: genesisHash } = blockchain.latestBlock;
+    const newData = { hello: 'world '};
+    const block = blockchain.addBlock(newData, genesisHash);
+    expect(blockchain.blocks).toEqual(undefined);
+
+    blockchain.save();
+    expect(blockchain.blocks.length).toEqual(2);
+  });
+
   it('when { secret } & .addBlock()', () => {
     const blockchain = new Blockchain({ secret });
     const { hash: genesisHash } = blockchain.latestBlock;
@@ -134,15 +154,15 @@ describe('Blockchain', () => {
 
     expect(() => {
       blockchain.addBlock({ hello: 'world '}, genesisHash);
-    }).toThrowError(`${DEFAULT_COIN} is in read mode only.`)
+    }).toThrowError('Read mode only')
   });
 
-  it('when { readMode } & keyChain not exists.', () => {
+  it('when { readMode } & key not exists.', () => {
     const blockchain = new Blockchain();
 
     expect(() => {
-      new Blockchain({ keyChain, readMode: true });
-    }).toThrowError(`${keyChain} is in read mode only`)
+      new Blockchain({ key, readMode: true });
+    }).toThrowError('Read mode only')
   });
 
   it('.isValidChain', () => {
