@@ -7,7 +7,7 @@ import Blockchain from './Blockchain';
 const DEFAULT_FILE = 'vanillachain';
 const DEFAULT_COIN = 'coin';
 const DEFAULT_DIFFICULTY = 1;
-const file = 'demo';
+const file = 'vanillachain_2';
 const keyChain = 'demo';
 const difficulty = 3;
 const secret = 'salt_and_pepper';
@@ -16,7 +16,7 @@ describe('Blockchain', () => {
   beforeEach(() => {
     const folder = path.resolve('.', 'store');
     if (fs.existsSync(`${folder}/vanillachain.json`)) fs.unlinkSync(`${folder}/vanillachain.json`);
-    if (fs.existsSync(`${folder}/demo.json`)) fs.unlinkSync(`${folder}/demo.json`);
+    if (fs.existsSync(`${folder}/vanillachain_2.json`)) fs.unlinkSync(`${folder}/vanillachain_2.json`);
   });
 
   it('default', () => {
@@ -39,8 +39,7 @@ describe('Blockchain', () => {
     const blockchain = new Blockchain({ keyChain });
 
     expect(blockchain).toBeDefined();
-    // expect(blockchain.file).toEqual(DEFAULT_FILE);
-    // expect(blockchain.keyChain).toEqual(keyChain);
+    expect(blockchain.latestBlock).toBeDefined();
   });
 
   it('when { difficulty }', () => {
@@ -62,14 +61,6 @@ describe('Blockchain', () => {
     expect(() => {
       new Blockchain({ readMode: true });
     }).toThrowError(`File ${DEFAULT_FILE} doesn't exists.`)
-  });
-
-  it('when { readMode } & keyChain not exists.', () => {
-    const blockchain = new Blockchain();
-
-    expect(() => {
-      new Blockchain({ keyChain, readMode: true });
-    }).toThrowError(`Blockchain ${keyChain} doesn't exists.`)
   });
 
   it('.blocks', () => {
@@ -139,10 +130,19 @@ describe('Blockchain', () => {
 
     const blockchain = new Blockchain({ readMode: true });
     const { hash: genesisHash } = blockchain.latestBlock;
+    expect(genesisHash).toBeDefined();
 
     expect(() => {
       blockchain.addBlock({ hello: 'world '}, genesisHash);
-    }).toThrowError(`The coin is in read mode only.`)
+    }).toThrowError(`${DEFAULT_COIN} is in read mode only.`)
+  });
+
+  it('when { readMode } & keyChain not exists.', () => {
+    const blockchain = new Blockchain();
+
+    expect(() => {
+      new Blockchain({ keyChain, readMode: true });
+    }).toThrowError(`${keyChain} is in read mode only`)
   });
 
   it('.isValidChain', () => {

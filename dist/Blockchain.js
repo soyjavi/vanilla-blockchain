@@ -6,6 +6,14 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _fs = require('fs');
+
+var _fs2 = _interopRequireDefault(_fs);
+
+var _path = require('path');
+
+var _path2 = _interopRequireDefault(_path);
+
 var _Block = require('./Block');
 
 var _Block2 = _interopRequireDefault(_Block);
@@ -20,6 +28,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var folder = _path2.default.resolve('.', 'store');
 var state = new WeakMap();
 
 var Blockchain = function () {
@@ -37,21 +46,21 @@ var Blockchain = function () {
 
     _classCallCheck(this, Blockchain);
 
-    var _ref2 = new _Store2.default({ file: file, keyChain: keyChain, readMode: readMode }),
-        store = _ref2.store,
-        _ref2$blocks = _ref2.blocks,
-        blocks = _ref2$blocks === undefined ? [] : _ref2$blocks;
+    var filename = folder + '/' + file + '.json';
+
+    if (!_fs2.default.existsSync(filename) && readMode) throw Error('File ' + file + ' doesn\'t exists.');
+
+    var store = new _Store2.default({ filename: filename });
 
     state.set(this, {
       difficulty: difficulty,
       keyChain: keyChain,
       readMode: readMode,
       secret: secret,
-      store: store,
-      blocks: blocks
+      store: store
     });
 
-    if (blocks.length === 0) this.addBlock('Genesis Block');
+    if (!store.get(keyChain).value) this.addBlock('Genesis Block');
 
     return this;
   }
@@ -70,11 +79,10 @@ var Blockchain = function () {
           secret = _state$get.secret,
           store = _state$get.store;
 
-      if (readMode) throw Error('The ' + keyChain + ' is in read mode only.');
-      if (previousHash !== latestBlock.hash) throw Error('The previous hash is not valid.');
+      if (readMode) throw Error(keyChain + ' is in read mode only.');else if (previousHash !== latestBlock.hash) throw Error('The previous hash is not valid.');
 
       var newBlock = new _Block2.default({ data: data, previousHash: previousHash, difficulty: difficulty });
-      store.get(keyChain).push((0, _modules.encrypt)(newBlock, secret)).write();
+      store.get(keyChain).push((0, _modules.encrypt)(newBlock, secret)).save();
 
       return newBlock;
     }
@@ -82,18 +90,19 @@ var Blockchain = function () {
     key: 'blocks',
     get: function get() {
       var _state$get2 = state.get(this),
-          blocks = _state$get2.blocks;
+          value = _state$get2.store.value;
 
       // @TODO: We should decrypt
 
 
-      return blocks;
+      return value;
     }
   }, {
     key: 'latestBlock',
     get: function get() {
       var _state$get3 = state.get(this),
-          blocks = _state$get3.blocks,
+          _state$get3$store$val = _state$get3.store.value,
+          blocks = _state$get3$store$val === undefined ? [] : _state$get3$store$val,
           secret = _state$get3.secret;
 
       var block = blocks[blocks.length - 1];
@@ -104,7 +113,8 @@ var Blockchain = function () {
     key: 'isValidChain',
     get: function get() {
       var _state$get4 = state.get(this),
-          blocks = _state$get4.blocks,
+          _state$get4$store$val = _state$get4.store.value,
+          blocks = _state$get4$store$val === undefined ? [] : _state$get4$store$val,
           secret = _state$get4.secret;
 
       return (0, _modules.isValidChain)(blocks, secret);

@@ -1,6 +1,6 @@
 {
   "name": "vanillachain-core",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A distributed database that maintains a continuously growing list of ordered records.",
   "keywords": [
     "blockchain",
@@ -21,8 +21,7 @@
   "homepage": "https://github.com/soyjavi/vanillachain-core",
   "bugs": "https://github.com/soyjavi/vanillachain-core/issues",
   "dependencies": {
-    "crypto-js": "3.1.8",
-    "lowdb": "1.0.0"
+    "crypto-js": "3.1.8"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
