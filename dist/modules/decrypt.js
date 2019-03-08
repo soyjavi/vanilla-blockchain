@@ -15,6 +15,13 @@ exports.default = function () {
   var secret = arguments[1];
 
   if (!secret) return value;
+  var json = void 0;
 
-  return JSON.parse(_cryptoJs.AES.decrypt(value, secret).toString(_cryptoJs2.default.enc.Utf8));
+  try {
+    json = JSON.parse(_cryptoJs.AES.decrypt(value, secret).toString(_cryptoJs2.default.enc.Utf8));
+  } catch (e) {
+    json = {};
+  }
+
+  return json;
 };
