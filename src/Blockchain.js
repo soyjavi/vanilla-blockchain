@@ -13,7 +13,7 @@ export default class Blockchain {
     autoSave = true,
     difficulty = 1,
     file = 'vanillachain',
-    key,
+    key = 'blocks',
     readMode = false,
     secret,
   } = {}) {
@@ -62,7 +62,6 @@ export default class Blockchain {
   get blocks() {
     const { secret, store: { value } } = state.get(this);
 
-    // return secret ? decrypt(value, secret) : value;
     return secret
       ? value.map(item => decrypt(item, secret))
       : value;

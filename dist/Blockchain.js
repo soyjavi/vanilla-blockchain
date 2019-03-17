@@ -40,7 +40,8 @@ var Blockchain = function () {
         difficulty = _ref$difficulty === undefined ? 1 : _ref$difficulty,
         _ref$file = _ref.file,
         file = _ref$file === undefined ? 'vanillachain' : _ref$file,
-        key = _ref.key,
+        _ref$key = _ref.key,
+        key = _ref$key === undefined ? 'blocks' : _ref$key,
         _ref$readMode = _ref.readMode,
         readMode = _ref$readMode === undefined ? false : _ref$readMode,
         secret = _ref.secret;
@@ -105,9 +106,6 @@ var Blockchain = function () {
       var _state$get3 = state.get(this),
           secret = _state$get3.secret,
           value = _state$get3.store.value;
-
-      // return secret ? decrypt(value, secret) : value;
-
 
       return secret ? value.map(function (item) {
         return (0, _modules.decrypt)(item, secret);
