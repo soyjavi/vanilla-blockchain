@@ -57,6 +57,14 @@ describe('Blockchain', () => {
     expect(latestBlock.data).toEqual('Genesis Block');
   });
 
+  it('when invalid { secret }', () => {
+    const blockchain = new Blockchain({ file, secret });
+
+    expect(() => {
+      new Blockchain({ file, secret: `sal_y_pimienta` });
+    }).toThrowError(`Blockchain can not decrypted`)
+  });
+
   it('when { readMode } & file not exists.', () => {
     expect(() => {
       new Blockchain({ readMode: true });

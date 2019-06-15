@@ -32,7 +32,14 @@ export default class Blockchain {
       store,
     });
 
-    if (!store.get(key).value) this.addBlock('Genesis Block');
+    const [genesisBlock] = store.get(key).value || [];
+    if (!genesisBlock) {
+      this.addBlock('Genesis Block');
+    } else if (secret && genesisBlock) {
+      try {
+        decrypt(genesisBlock, secret);
+      } catch (error) { throw Error('Blockchain can not decrypted'); }
+    }
 
     return this;
   }
