@@ -38,7 +38,7 @@ export default class Blockchain {
     } else if (secret && genesisBlock) {
       try {
         decrypt(genesisBlock, secret);
-      } catch (error) { throw Error('Blockchain can not decrypted'); }
+      } catch (error) { throw Error(`Blockchain ${file} can't be decrypted`); }
     }
 
     return this;

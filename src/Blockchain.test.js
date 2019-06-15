@@ -62,7 +62,7 @@ describe('Blockchain', () => {
 
     expect(() => {
       new Blockchain({ file, secret: `sal_y_pimienta` });
-    }).toThrowError(`Blockchain can not decrypted`)
+    }).toThrowError(`Blockchain ${file} can't be decrypted`)
   });
 
   it('when { readMode } & file not exists.', () => {
