@@ -20,7 +20,7 @@ exports.default = function () {
   try {
     json = JSON.parse(_cryptoJs.AES.decrypt(value, secret).toString(_cryptoJs2.default.enc.Utf8));
   } catch (e) {
-    json = {};
+    throw Error('Block ' + value + ' can\'t be decrypted.');
   }
 
   return json;
