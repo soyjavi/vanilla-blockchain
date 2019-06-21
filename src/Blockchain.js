@@ -69,9 +69,15 @@ export default class Blockchain {
   get blocks() {
     const { secret, store: { value } } = state.get(this);
 
-    return secret
-      ? value.map(item => decrypt(item, secret))
-      : value;
+    if (!secret) return value;
+    const blocks = [];
+    value.forEach((item) => {
+      try {
+        blocks.push(decrypt(item, secret));
+      } catch (error) { console.log(error); }
+    });
+
+    return blocks;
   }
 
   get latestBlock() {

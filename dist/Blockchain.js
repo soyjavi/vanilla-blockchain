@@ -121,9 +121,17 @@ var Blockchain = function () {
           secret = _state$get3.secret,
           value = _state$get3.store.value;
 
-      return secret ? value.map(function (item) {
-        return (0, _modules.decrypt)(item, secret);
-      }) : value;
+      if (!secret) return value;
+      var blocks = [];
+      value.forEach(function (item) {
+        try {
+          blocks.push((0, _modules.decrypt)(item, secret));
+        } catch (error) {
+          console.log(error);
+        }
+      });
+
+      return blocks;
     }
   }, {
     key: 'latestBlock',
