@@ -14,16 +14,22 @@ var Block = function Block() {
       difficulty = _ref$difficulty === undefined ? 0 : _ref$difficulty,
       previousHash = _ref.previousHash,
       _ref$timestamp = _ref.timestamp,
-      timestamp = _ref$timestamp === undefined ? new Date().toISOString() : _ref$timestamp;
+      timestamp = _ref$timestamp === undefined ? new Date().toISOString() : _ref$timestamp,
+      fork = _ref.fork;
 
-  var nonce = 0;
-  var hash = '';
+  var _ref2 = fork || {},
+      _ref2$nonce = _ref2.nonce,
+      nonce = _ref2$nonce === undefined ? 0 : _ref2$nonce,
+      _ref2$hash = _ref2.hash,
+      hash = _ref2$hash === undefined ? '' : _ref2$hash;
 
-  while (hash.substring(0, difficulty) !== Array(difficulty + 1).join('0')) {
-    nonce += 1;
-    hash = (0, _modules.calculateHash)({
-      previousHash: previousHash, timestamp: timestamp, data: data, nonce: nonce
-    });
+  if (!fork || nonce === 0 && hash === '') {
+    while (hash.substring(0, difficulty) !== Array(difficulty + 1).join('0')) {
+      nonce += 1;
+      hash = (0, _modules.calculateHash)({
+        previousHash: previousHash, timestamp: timestamp, data: data, nonce: nonce
+      });
+    }
   }
 
   return {

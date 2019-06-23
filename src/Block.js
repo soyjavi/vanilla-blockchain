@@ -5,15 +5,17 @@ const Block = ({
   difficulty = 0,
   previousHash,
   timestamp = new Date().toISOString(),
+  fork,
 } = {}) => {
-  let nonce = 0;
-  let hash = '';
+  let { nonce = 0, hash = '' } = fork || {};
 
-  while (hash.substring(0, difficulty) !== Array(difficulty + 1).join('0')) {
-    nonce += 1;
-    hash = calculateHash({
-      previousHash, timestamp, data, nonce,
-    });
+  if (!fork || (nonce === 0 && hash === '')) {
+    while (hash.substring(0, difficulty) !== Array(difficulty + 1).join('0')) {
+      nonce += 1;
+      hash = calculateHash({
+        previousHash, timestamp, data, nonce,
+      });
+    }
   }
 
   return {

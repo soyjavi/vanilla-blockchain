@@ -165,6 +165,36 @@ describe('Blockchain', () => {
     }).toThrowError('Read mode only')
   });
 
+  it('when { fork } & .addBlock()', () => {
+    const blockchain = new Blockchain();
+
+    const newData = { hello: 'world '};
+    const fork = { hash: 'b894bd2ef4b59974e2704ec677524f3732bb1e9018c63b0d98df4224ca59dbca', nonce: 128 };
+    const { hash: genesisHash } = blockchain.latestBlock;
+
+    blockchain.addBlock(newData, genesisHash, fork);
+    const {
+      data, hash, nonce, previousHash, timestamp,
+    } = blockchain.latestBlock;
+
+    expect(data).toEqual(newData);
+    expect(hash).toEqual(fork.hash);
+    expect(nonce).toEqual(fork.nonce);
+    expect(previousHash).toEqual(genesisHash);
+  });
+
+  it('when { fork } & .addBlock() & parameters are invalid.', () => {
+    const blockchain = new Blockchain();
+    const fork = {};
+
+    expect(() => {
+      const { hash: genesisHash } = blockchain.latestBlock;
+      const newData = { hello: 'world '};
+
+      blockchain.addBlock(newData, genesisHash, fork);
+    }).toThrowError('Not valid fork parameters.')
+  });
+
   it('when { readMode } & key not exists.', () => {
     const blockchain = new Blockchain();
 

@@ -44,7 +44,7 @@ export default class Blockchain {
     return this;
   }
 
-  addBlock(data = {}, previousHash) {
+  addBlock(data = {}, previousHash, fork) {
     const { latestBlock } = this;
     const {
       autoSave, difficulty, key, readMode, secret, store,
@@ -52,8 +52,11 @@ export default class Blockchain {
 
     if (readMode) throw Error('Read mode only.');
     else if (previousHash !== latestBlock.hash) throw Error('The previous hash is not valid.');
+    else if (fork && (!fork.hash || fork.nonce <= 0)) throw Error('Not valid fork parameters.');
 
-    const newBlock = new Block({ data, previousHash, difficulty });
+    const newBlock = new Block({
+      data, previousHash, difficulty, fork,
+    });
     store.get(key).push(encrypt(newBlock, secret));
 
     if (autoSave) store.save();

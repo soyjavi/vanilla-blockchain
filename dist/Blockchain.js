@@ -87,6 +87,7 @@ var Blockchain = function () {
     value: function addBlock() {
       var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var previousHash = arguments[1];
+      var fork = arguments[2];
       var latestBlock = this.latestBlock;
 
       var _state$get = state.get(this),
@@ -97,9 +98,11 @@ var Blockchain = function () {
           secret = _state$get.secret,
           store = _state$get.store;
 
-      if (readMode) throw Error('Read mode only.');else if (previousHash !== latestBlock.hash) throw Error('The previous hash is not valid.');
+      if (readMode) throw Error('Read mode only.');else if (previousHash !== latestBlock.hash) throw Error('The previous hash is not valid.');else if (fork && (!fork.hash || fork.nonce <= 0)) throw Error('Not valid fork parameters.');
 
-      var newBlock = new _Block2.default({ data: data, previousHash: previousHash, difficulty: difficulty });
+      var newBlock = new _Block2.default({
+        data: data, previousHash: previousHash, difficulty: difficulty, fork: fork
+      });
       store.get(key).push((0, _modules.encrypt)(newBlock, secret));
 
       if (autoSave) store.save();

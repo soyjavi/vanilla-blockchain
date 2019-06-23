@@ -37,4 +37,16 @@ describe('Block', () => {
     expect(block.hash.substring(0, 2)).toEqual('00');
     expect(block.hash.length).toEqual(64);
   });
+
+  it('when fork', () => {
+    const fork = {
+      hash: '004272a6b83735c597e29eaa9e91392ceb814c4bf680ccb0391d5e474ecb6980',
+      nonce: 128,
+    };
+    const block = new Block({ data, previousHash, difficulty: 2, fork });
+
+    expect(Object.keys(block)).toEqual(['data', 'nonce', 'previousHash', 'timestamp', 'hash']);
+    expect(block.hash).toEqual(fork.hash);
+    expect(block.nonce).toEqual(fork.nonce);
+  });
 });
