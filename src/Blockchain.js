@@ -69,6 +69,13 @@ export default class Blockchain {
     store.save();
   }
 
+  wipe() {
+    const { store } = state.get(this);
+    store.wipe();
+    this.addBlock('Genesis Block');
+    store.save();
+  }
+
   get blocks() {
     const { secret, store: { value } } = state.get(this);
 

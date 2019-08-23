@@ -17,6 +17,7 @@ describe('Blockchain', () => {
     const folder = path.resolve('.', 'store');
     if (fs.existsSync(`${folder}/vanillachain.json`)) fs.unlinkSync(`${folder}/vanillachain.json`);
     if (fs.existsSync(`${folder}/vanillachain_2.json`)) fs.unlinkSync(`${folder}/vanillachain_2.json`);
+    if (fs.existsSync(`${folder}/vanillachain_3.json`)) fs.unlinkSync(`${folder}/vanillachain_3.json`);
   });
 
   it('default', () => {
@@ -223,5 +224,18 @@ describe('Blockchain', () => {
     const block4 = blockchain.addBlock({ hello: 'block_4 '}, block3.hash);
 
     expect(blockchain.isValidChain).toEqual(true);
+  });
+
+  it('.wipe()', () => {
+    const file = 'vanillachain_3';
+    const blockchain = new Blockchain({ file });
+    const { hash: genesisHash } = blockchain.latestBlock;
+
+    blockchain.addBlock({ hello: 'world' }, genesisHash);
+    expect(blockchain.blocks.length).toEqual(2);
+
+    blockchain.wipe();
+    expect(blockchain.blocks.length).toEqual(1);
+    expect(blockchain.latestBlock.data).toEqual('Genesis Block')
   });
 });

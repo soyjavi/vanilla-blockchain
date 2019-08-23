@@ -95,7 +95,8 @@ var Store = function () {
     key: 'save',
     value: function save(value) {
       var _state$get2 = state.get(this),
-          data = _state$get2.data,
+          _state$get2$data = _state$get2.data,
+          data = _state$get2$data === undefined ? {} : _state$get2$data,
           filename = _state$get2.filename,
           key = _state$get2.key,
           _state$get2$memoryPoo = _state$get2.memoryPool,
@@ -118,13 +119,17 @@ var Store = function () {
       var _state$get3 = state.get(this),
           filename = _state$get3.filename;
 
-      write(filename);
+      var data = {};
+
+      state.set(this, Object.assign(state.get(this), { data: data, memoryPool: [] }));
+      write(filename, data);
     }
   }, {
     key: 'value',
     get: function get() {
       var _state$get4 = state.get(this),
-          data = _state$get4.data,
+          _state$get4$data = _state$get4.data,
+          data = _state$get4$data === undefined ? {} : _state$get4$data,
           key = _state$get4.key;
 
       return data[key];

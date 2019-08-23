@@ -9,6 +9,7 @@ describe('Store', () => {
   beforeEach(() => {
     if (fs.existsSync(`${folder}/store.json`)) fs.unlinkSync(`${folder}/store.json`);
     if (fs.existsSync(`${folder}/store_2.json`)) fs.unlinkSync(`${folder}/store_2.json`);
+    if (fs.existsSync(`${folder}/store_3.json`)) fs.unlinkSync(`${folder}/store_3.json`);
   });
 
   it('default', () => {
@@ -72,4 +73,14 @@ describe('Store', () => {
 
     store.save();
   });
+
+  it('.wipe()', () => {
+    const store = new Store({ filename: `${folder}/store_3.json` });
+
+    store.push({ hello: 'world' });
+    store.wipe();
+    expect(store.value).toEqual(undefined);
+    store.push({ hello: 'world' });
+    expect(store.value).toEqual([{ hello: 'world'}]);
+  })
 });

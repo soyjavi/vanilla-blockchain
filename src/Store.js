@@ -60,7 +60,7 @@ export default class Store {
 
   save(value) {
     const {
-      data, filename, key, memoryPool = [],
+      data = {}, filename, key, memoryPool = [],
     } = state.get(this);
 
     if (value) {
@@ -76,14 +76,16 @@ export default class Store {
   }
 
   get value() {
-    const { data, key } = state.get(this);
+    const { data = {}, key } = state.get(this);
 
     return data[key];
   }
 
   wipe() {
     const { filename } = state.get(this);
+    const data = {};
 
-    write(filename);
+    state.set(this, Object.assign(state.get(this), { data, memoryPool: [] }));
+    write(filename, data);
   }
 }

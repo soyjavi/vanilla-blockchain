@@ -118,11 +118,21 @@ var Blockchain = function () {
       store.save();
     }
   }, {
+    key: 'wipe',
+    value: function wipe() {
+      var _state$get3 = state.get(this),
+          store = _state$get3.store;
+
+      store.wipe();
+      this.addBlock('Genesis Block');
+      store.save();
+    }
+  }, {
     key: 'blocks',
     get: function get() {
-      var _state$get3 = state.get(this),
-          secret = _state$get3.secret,
-          value = _state$get3.store.value;
+      var _state$get4 = state.get(this),
+          secret = _state$get4.secret,
+          value = _state$get4.store.value;
 
       if (!secret) return value;
       var blocks = [];
@@ -139,10 +149,10 @@ var Blockchain = function () {
   }, {
     key: 'latestBlock',
     get: function get() {
-      var _state$get4 = state.get(this),
-          _state$get4$store$val = _state$get4.store.value,
-          blocks = _state$get4$store$val === undefined ? [] : _state$get4$store$val,
-          secret = _state$get4.secret;
+      var _state$get5 = state.get(this),
+          _state$get5$store$val = _state$get5.store.value,
+          blocks = _state$get5$store$val === undefined ? [] : _state$get5$store$val,
+          secret = _state$get5.secret;
 
       var block = blocks[blocks.length - 1];
 
@@ -151,10 +161,10 @@ var Blockchain = function () {
   }, {
     key: 'isValidChain',
     get: function get() {
-      var _state$get5 = state.get(this),
-          _state$get5$store$val = _state$get5.store.value,
-          blocks = _state$get5$store$val === undefined ? [] : _state$get5$store$val,
-          secret = _state$get5.secret;
+      var _state$get6 = state.get(this),
+          _state$get6$store$val = _state$get6.store.value,
+          blocks = _state$get6$store$val === undefined ? [] : _state$get6$store$val,
+          secret = _state$get6.secret;
 
       return (0, _modules.isValidChain)(blocks, secret);
     }
