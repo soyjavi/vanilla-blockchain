@@ -14,7 +14,7 @@ var Block = function Block() {
       difficulty = _ref$difficulty === undefined ? 0 : _ref$difficulty,
       previousHash = _ref.previousHash,
       _ref$timestamp = _ref.timestamp,
-      timestamp = _ref$timestamp === undefined ? new Date().toISOString() : _ref$timestamp,
+      timestamp = _ref$timestamp === undefined ? new Date().getTime() : _ref$timestamp,
       fork = _ref.fork;
 
   var _ref2 = fork || {},
