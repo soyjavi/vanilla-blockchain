@@ -13,8 +13,11 @@ describe('Block', () => {
 
     expect(block.data).toEqual({});
     expect(block.nonce).toEqual(0);
+    expect(typeof block.nonce).toEqual('number')
     expect(block.previousHash).toEqual(undefined);
     expect(block.timestamp).toBeDefined();
+    expect(typeof block.timestamp).toEqual('number')
+
   });
 
   it('when data', () => {

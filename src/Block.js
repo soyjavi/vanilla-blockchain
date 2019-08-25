@@ -4,7 +4,7 @@ const Block = ({
   data = {},
   difficulty = 0,
   previousHash,
-  timestamp = new Date().toISOString(),
+  timestamp = new Date().getTime(),
   fork,
 } = {}) => {
   let { nonce = 0, hash = '' } = fork || {};

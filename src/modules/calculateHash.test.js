@@ -1,7 +1,7 @@
 import calculateHash from './calculateHash';
 
 const previousHash = 'b894bd2ef4b59974e2704ec677524f3732bb1e9018c63b0d98df4224ca59dbca';
-const timestamp = new Date(1980, 10, 4, 0, 0, 0);
+const timestamp = new Date(1980, 10, 4, 0, 0, 0).getTime();
 const data = { hello: 'world' };
 const nonce = 32;
 
