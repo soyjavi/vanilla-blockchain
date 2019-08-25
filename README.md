@@ -37,7 +37,7 @@ That is the reason why cryptocurrencies are based on blockchains. You don't want
 We will start by defining the block structure. Only the most essential properties are included at the block at this point.
 
 * `data`: Any data that is included in the block.
-* `timestamp`: A timestamp using ISO format.
+* `timestamp`: A UTC timestamp using numeric format.
 * `nonce` : A number of attempts to generate the correct hash.
 * `hash`: A sha256 hash taken from the content of the block.
 * `previousHash`: A reference to the hash of the previous block.
@@ -47,7 +47,7 @@ The code for the block structure looks like the following:
 ```
 class Block {
   constructor({
-    data = {}, previousHash, timestamp = new Date().toISOString(),
+    data = {}, previousHash, timestamp = new Date().getTime(),
   } = {}) {
     this.data = data;
     this.nonce = 0;
