@@ -1,6 +1,6 @@
 {
   "name": "vanillachain-core",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "description": "A distributed database that maintains a continuously growing list of ordered records.",
   "keywords": [
     "blockchain",
@@ -21,15 +21,16 @@
   "homepage": "https://github.com/soyjavi/vanillachain-core",
   "bugs": "https://github.com/soyjavi/vanillachain-core/issues",
   "dependencies": {
-    "crypto-js": "3.1.8"
+    "crypto-js": "4.0.0"
   },
   "devDependencies": {
-    "babel-cli": "6.26.0",
-    "babel-preset-env": "1.7.0",
-    "eslint": "5.15.2",
-    "eslint-config-airbnb-base": "14.0.0",
-    "eslint-plugin-import": "2.18.2",
-    "jest": "23.6.0"
+    "@babel/cli": "7.10.1",
+    "@babel/core": "7.10.2",
+    "@babel/preset-env": "7.10.2",
+    "eslint": "7.2.0",
+    "eslint-config-airbnb-base": "14.1.0",
+    "eslint-plugin-import": "2.20.2",
+    "jest": "26.0.1"
   },
   "scripts": {
     "build": "babel src -d dist --ignore '**/*.test.js'",
