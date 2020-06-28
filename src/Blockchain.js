@@ -8,6 +8,7 @@ const state = new WeakMap();
 
 export default class Blockchain {
   constructor({
+    adapter = jsonAdapter,
     autoSave = true,
     defaults = { blocks: [] },
     difficulty = 1,
@@ -16,13 +17,7 @@ export default class Blockchain {
     readMode,
     secret,
   } = {}) {
-    const storage = new Storage({
-      adapter: jsonAdapter,
-      autoSave,
-      defaults,
-      filename,
-      secret,
-    });
+    const storage = new Storage({ adapter, autoSave, defaults, filename, secret });
 
     state.set(this, { autoSave, difficulty, readMode, storage });
 

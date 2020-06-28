@@ -43,6 +43,8 @@ var state = new WeakMap();
 var Blockchain = /*#__PURE__*/function () {
   function Blockchain() {
     var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+        _ref$adapter = _ref.adapter,
+        adapter = _ref$adapter === void 0 ? _vanillaStorage.jsonAdapter : _ref$adapter,
         _ref$autoSave = _ref.autoSave,
         autoSave = _ref$autoSave === void 0 ? true : _ref$autoSave,
         _ref$defaults = _ref.defaults,
@@ -61,7 +63,7 @@ var Blockchain = /*#__PURE__*/function () {
     _classCallCheck(this, Blockchain);
 
     var storage = new _vanillaStorage["default"]({
-      adapter: _vanillaStorage.jsonAdapter,
+      adapter: adapter,
       autoSave: autoSave,
       defaults: defaults,
       filename: filename,

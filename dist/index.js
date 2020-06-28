@@ -3,29 +3,33 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-Object.defineProperty(exports, "calculateHash", {
-  enumerable: true,
-  get: function get() {
-    return _calculateHash["default"];
-  }
-});
-Object.defineProperty(exports, "Block", {
-  enumerable: true,
-  get: function get() {
-    return _Block["default"];
-  }
-});
 Object.defineProperty(exports, "default", {
   enumerable: true,
   get: function get() {
     return _Blockchain["default"];
   }
 });
-
-var _calculateHash = _interopRequireDefault(require("./modules/calculateHash"));
-
-var _Block = _interopRequireDefault(require("./Block"));
+Object.defineProperty(exports, "jsonAdapter", {
+  enumerable: true,
+  get: function get() {
+    return _vanillaStorage.jsonAdapter;
+  }
+});
+Object.defineProperty(exports, "storageAdapter", {
+  enumerable: true,
+  get: function get() {
+    return _vanillaStorage.storageAdapter;
+  }
+});
+Object.defineProperty(exports, "memoryAdapter", {
+  enumerable: true,
+  get: function get() {
+    return _vanillaStorage.memoryAdapter;
+  }
+});
 
 var _Blockchain = _interopRequireDefault(require("./Blockchain"));
+
+var _vanillaStorage = require("vanilla-storage");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
