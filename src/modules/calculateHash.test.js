@@ -28,7 +28,10 @@ describe('calculateHash', () => {
 
   it('add nonce', () => {
     const hash = calculateHash({
-      previousHash, timestamp, data, nonce,
+      previousHash,
+      timestamp,
+      data,
+      nonce,
     });
     expect(hash.length).toEqual(64);
   });
