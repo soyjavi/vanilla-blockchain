@@ -102,9 +102,9 @@ var Blockchain = /*#__PURE__*/function () {
       if (readMode) throw Error('Read mode only.');else if (previousHash !== latestBlock.hash) throw Error('The previous hash is not valid.');else if (fork && (!fork.hash || fork.nonce <= 0)) throw Error('Not valid fork parameters.');
       var newBlock = new _Block["default"]({
         data: data,
-        previousHash: previousHash,
         difficulty: difficulty,
-        fork: fork
+        fork: fork,
+        previousHash: previousHash
       });
       storage.push(newBlock);
       if (autoSave) this.save();

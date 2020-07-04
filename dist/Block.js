@@ -13,10 +13,10 @@ var Block = function Block() {
       data = _ref$data === void 0 ? {} : _ref$data,
       _ref$difficulty = _ref.difficulty,
       difficulty = _ref$difficulty === void 0 ? 0 : _ref$difficulty,
+      fork = _ref.fork,
       previousHash = _ref.previousHash,
       _ref$timestamp = _ref.timestamp,
-      timestamp = _ref$timestamp === void 0 ? new Date().getTime() : _ref$timestamp,
-      fork = _ref.fork;
+      timestamp = _ref$timestamp === void 0 ? new Date().getTime() : _ref$timestamp;
 
   var _ref2 = fork || {},
       _ref2$nonce = _ref2.nonce,
@@ -28,20 +28,20 @@ var Block = function Block() {
     while (hash.substring(0, difficulty) !== Array(difficulty + 1).join('0')) {
       nonce += 1;
       hash = (0, _modules.calculateHash)({
-        previousHash: previousHash,
-        timestamp: timestamp,
         data: data,
-        nonce: nonce
+        nonce: nonce,
+        previousHash: previousHash,
+        timestamp: timestamp
       });
     }
   }
 
   return {
     data: data,
+    hash: hash,
     nonce: nonce,
     previousHash: previousHash,
-    timestamp: timestamp,
-    hash: hash
+    timestamp: timestamp
   };
 };
 

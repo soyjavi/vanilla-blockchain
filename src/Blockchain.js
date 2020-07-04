@@ -41,9 +41,9 @@ export default class Blockchain {
 
     const newBlock = new Block({
       data,
-      previousHash,
       difficulty,
       fork,
+      previousHash,
     });
 
     storage.push(newBlock);

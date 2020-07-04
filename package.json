@@ -1,6 +1,6 @@
 {
   "name": "vanilla-blockchain",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "🍦A distributed database that maintains a continuously growing list of ordered records.",
   "keywords": [
     "blockchain",
@@ -15,6 +15,7 @@
     "type": "git",
     "url": "https://github.com/soyjavi/vanilla-blockchain.git"
   },
+  "author": "soyjavi",
   "license": "MIT",
   "main": "./dist/index.js",
   "bin": "./dist/index.js",
@@ -22,7 +23,7 @@
   "bugs": "https://github.com/soyjavi/vanilla-blockchain/issues",
   "dependencies": {
     "crypto-js": "4.0.0",
-    "vanilla-storage": "0.2.6"
+    "vanilla-storage": "0.3.4"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.3",
@@ -30,16 +31,16 @@
     "@babel/preset-env": "^7.10.3",
     "eslint": "^7.3.1",
     "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-prettier": "^3.1.4",
     "jest": "^26.1.0",
-    "prettier": "^2.0.5"
+    "prettier": "^2.0.5",
+    "release-it": "^13.6.4"
   },
   "scripts": {
     "build": "babel src -d dist --ignore '**/*.test.js'",
-    "test": "yarn build && jest src/Blockchain.test.js",
-    "fix": "yarn prettier && yarn linter",
-    "prettier": "prettier src --write",
-    "linter": "eslint src --fix "
+    "test": "yarn build && jest src",
+    "lint": "eslint src --fix",
+    "release": "release-it"
   }
 }
