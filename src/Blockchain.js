@@ -1,44 +1,31 @@
-import fs from 'fs';
-import path from 'path';
+import Storage, { jsonAdapter } from 'vanilla-storage';
 
 import Block from './Block';
-import Store from './Store';
-import { decrypt, encrypt, isValidChain } from './modules';
+import { calculateHash, decrypt } from './modules';
 
-const folder = path.resolve('.', 'store');
+// eslint-disable-next-line no-undef
 const state = new WeakMap();
 
 export default class Blockchain {
   constructor({
+    adapter = jsonAdapter,
     autoSave = true,
+    defaults = { blocks: [] },
     difficulty = 1,
-    file = 'vanillachain',
+    filename = 'vanilla-blockchain',
     key = 'blocks',
-    readMode = false,
+    readMode,
     secret,
   } = {}) {
-    const filename = `${folder}/${file}.json`;
+    const storage = new Storage({ adapter, autoSave, defaults, filename, secret });
 
-    if (!fs.existsSync(filename) && readMode) throw Error(`File ${file} doesn't exists.`);
+    state.set(this, { autoSave, difficulty, readMode, storage });
 
-    const store = new Store({ autoSave, filename });
-
-    state.set(this, {
-      autoSave,
-      difficulty,
-      key,
-      readMode,
-      secret,
-      store,
-    });
-
-    const [genesisBlock] = store.get(key).value || [];
-    if (!genesisBlock) {
-      this.addBlock('Genesis Block');
-    } else if (secret && genesisBlock) {
-      try {
-        decrypt(genesisBlock, secret);
-      } catch (error) { throw Error(`Blockchain ${file} can't be decrypted`); }
+    try {
+      this.get(key);
+    } catch (error) {
+      if (secret) throw Error(`Blockchain ${filename} can't be decrypted`);
+      else throw Error(error);
     }
 
     return this;
@@ -46,60 +33,80 @@ export default class Blockchain {
 
   addBlock(data = {}, previousHash, fork) {
     const { latestBlock } = this;
-    const {
-      autoSave, difficulty, key, readMode, secret, store,
-    } = state.get(this);
+    const { autoSave, difficulty, readMode, storage } = state.get(this);
 
     if (readMode) throw Error('Read mode only.');
     else if (previousHash !== latestBlock.hash) throw Error('The previous hash is not valid.');
     else if (fork && (!fork.hash || fork.nonce <= 0)) throw Error('Not valid fork parameters.');
 
     const newBlock = new Block({
-      data, previousHash, difficulty, fork,
+      data,
+      difficulty,
+      fork,
+      previousHash,
     });
-    store.get(key).push(encrypt(newBlock, secret));
 
-    if (autoSave) store.save();
+    storage.push(newBlock);
+    if (autoSave) this.save();
 
     return newBlock;
   }
 
+  get(key) {
+    const { readMode, storage } = state.get(this);
+
+    const [genesisBlock] = storage.get(key).value || [];
+    if (!genesisBlock) {
+      if (!readMode) this.addBlock('Genesis Block');
+      else throw Error('Read mode only.');
+    }
+
+    return this;
+  }
+
   save() {
-    const { store } = state.get(this);
-    store.save();
+    const { storage } = state.get(this);
+    storage.save();
+
+    return this;
   }
 
   wipe() {
-    const { store } = state.get(this);
-    store.wipe();
-    this.addBlock('Genesis Block');
-    store.save();
+    const { storage } = state.get(this);
+
+    storage.wipe();
+    return this;
   }
 
   get blocks() {
-    const { secret, store: { value } } = state.get(this);
+    const { storage } = state.get(this);
 
-    if (!secret) return value;
-    const blocks = [];
-    value.forEach((item) => {
-      try {
-        blocks.push(decrypt(item, secret));
-      } catch (error) { console.log(error); }
-    });
-
-    return blocks;
+    return storage.value;
   }
 
   get latestBlock() {
-    const { store: { value: blocks = [] }, secret } = state.get(this);
+    const {
+      storage: { value: blocks = [] },
+    } = state.get(this);
     const block = blocks[blocks.length - 1];
 
-    return block ? decrypt(block, secret) : {};
+    return block || {};
   }
 
   get isValidChain() {
-    const { store: { value: blocks = [] }, secret } = state.get(this);
+    const {
+      storage: { value: blocks = [] },
+      secret,
+    } = state.get(this);
 
-    return isValidChain(blocks, secret);
+    for (let i = 1; i < blocks.length; i += 1) {
+      const currentBlock = decrypt(blocks[i], secret);
+      const previousBlock = decrypt(blocks[i - 1], secret);
+
+      if (currentBlock.previousHash !== previousBlock.hash) return false;
+      if (currentBlock.hash !== calculateHash(currentBlock)) return false;
+    }
+
+    return true;
   }
 }

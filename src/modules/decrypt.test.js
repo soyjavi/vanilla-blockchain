@@ -38,7 +38,9 @@ describe('decrypt', () => {
   });
 
   it('{value:date} + {secret}', () => {
-    expect(decrypt('U2FsdGVkX1/BvZgquYu9Epg+j+sRYEXF6pGmLhVv+BA5HTMtiS+YqzOeq/h+I+7f', secret)).toEqual("1980-04-09T17:00:00.000Z");
+    expect(decrypt('U2FsdGVkX1/BvZgquYu9Epg+j+sRYEXF6pGmLhVv+BA5HTMtiS+YqzOeq/h+I+7f', secret)).toEqual(
+      '1980-04-09T17:00:00.000Z',
+    );
   });
 
   it('{value:string} + invalid {secret}', () => {

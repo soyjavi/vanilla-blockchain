@@ -1,27 +1,31 @@
-'use strict';
+"use strict";
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports["default"] = void 0;
 
-var _cryptoJs = require('crypto-js');
+var _cryptoJs = _interopRequireWildcard(require("crypto-js"));
 
-var _cryptoJs2 = _interopRequireDefault(_cryptoJs);
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-exports.default = function () {
+var _default = function _default() {
   var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-  var secret = arguments[1];
-
+  var secret = arguments.length > 1 ? arguments[1] : undefined;
   if (!secret) return value;
-  var json = void 0;
+  var json;
 
   try {
-    json = JSON.parse(_cryptoJs.AES.decrypt(value, secret).toString(_cryptoJs2.default.enc.Utf8));
+    json = JSON.parse(_cryptoJs.AES.decrypt(value, secret).toString(_cryptoJs["default"].enc.Utf8));
   } catch (e) {
-    throw Error('Block ' + value + ' can\'t be decrypted.');
+    throw Error("Block ".concat(value, " can't be decrypted."));
   }
 
   return json;
 };
+
+exports["default"] = _default;

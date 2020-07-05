@@ -1,7 +1,7 @@
 {
-  "name": "vanillachain-core",
-  "version": "0.1.17",
-  "description": "A distributed database that maintains a continuously growing list of ordered records.",
+  "name": "vanilla-blockchain",
+  "version": "0.2.4",
+  "description": "🍦A distributed database that maintains a continuously growing list of ordered records.",
   "keywords": [
     "blockchain",
     "store",
@@ -13,28 +13,34 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/soyjavi/vanillachain-core.git"
+    "url": "https://github.com/soyjavi/vanilla-blockchain.git"
   },
+  "author": "soyjavi",
   "license": "MIT",
   "main": "./dist/index.js",
   "bin": "./dist/index.js",
-  "homepage": "https://github.com/soyjavi/vanillachain-core",
-  "bugs": "https://github.com/soyjavi/vanillachain-core/issues",
+  "homepage": "https://github.com/soyjavi/vanilla-blockchain",
+  "bugs": "https://github.com/soyjavi/vanilla-blockchain/issues",
   "dependencies": {
-    "crypto-js": "4.0.0"
+    "crypto-js": "4.0.0",
+    "vanilla-storage": "0.3.4"
   },
   "devDependencies": {
-    "@babel/cli": "7.10.1",
-    "@babel/core": "7.10.2",
-    "@babel/preset-env": "7.10.2",
-    "eslint": "7.2.0",
-    "eslint-config-airbnb-base": "14.1.0",
-    "eslint-plugin-import": "2.20.2",
-    "jest": "26.0.1"
+    "@babel/cli": "^7.10.3",
+    "@babel/core": "^7.10.3",
+    "@babel/preset-env": "^7.10.3",
+    "eslint": "^7.3.1",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "jest": "^26.1.0",
+    "prettier": "^2.0.5",
+    "release-it": "^13.6.4"
   },
   "scripts": {
     "build": "babel src -d dist --ignore '**/*.test.js'",
-    "test": "jest src",
-    "lint": "eslint src"
+    "test": "yarn build && jest src",
+    "lint": "eslint src --fix",
+    "release": "release-it"
   }
 }

@@ -9,15 +9,14 @@ describe('Block', () => {
   it('default', () => {
     const block = new Block();
 
-    expect(Object.keys(block)).toEqual(['data', 'nonce', 'previousHash', 'timestamp', 'hash']);
+    expect(Object.keys(block)).toEqual(['data', 'hash', 'nonce', 'previousHash', 'timestamp']);
 
     expect(block.data).toEqual({});
     expect(block.nonce).toEqual(0);
-    expect(typeof block.nonce).toEqual('number')
+    expect(typeof block.nonce).toEqual('number');
     expect(block.previousHash).toEqual(undefined);
     expect(block.timestamp).toBeDefined();
-    expect(typeof block.timestamp).toEqual('number')
-
+    expect(typeof block.timestamp).toEqual('number');
   });
 
   it('when data', () => {
@@ -35,7 +34,7 @@ describe('Block', () => {
   it('when difficulty', () => {
     const block = new Block({ data, previousHash, difficulty: 2 });
 
-    expect(Object.keys(block)).toEqual(['data', 'nonce', 'previousHash', 'timestamp', 'hash']);
+    expect(Object.keys(block)).toEqual(['data', 'hash', 'nonce', 'previousHash', 'timestamp']);
     expect(block.hash).toBeDefined();
     expect(block.hash.substring(0, 2)).toEqual('00');
     expect(block.hash.length).toEqual(64);
@@ -48,7 +47,7 @@ describe('Block', () => {
     };
     const block = new Block({ data, previousHash, difficulty: 2, fork });
 
-    expect(Object.keys(block)).toEqual(['data', 'nonce', 'previousHash', 'timestamp', 'hash']);
+    expect(Object.keys(block)).toEqual(['data', 'hash', 'nonce', 'previousHash', 'timestamp']);
     expect(block.hash).toEqual(fork.hash);
     expect(block.nonce).toEqual(fork.nonce);
   });
