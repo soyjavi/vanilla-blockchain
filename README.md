@@ -1,9 +1,9 @@
-# vanillachain-core
-[![npm](https://img.shields.io/npm/v/vanillachain-core.svg?style=flat-square)](https://www.npmjs.com/package/vanillachain-core)
-[![Build Status](http://img.shields.io/travis/soyjavi/vanillachain-core/master.svg?style=flat-square)](https://travis-ci.org/soyjavi/vanillachain-core)
-[![dependencies Status](https://david-dm.org/soyjavi/vanillachain-core/status.svg?style=flat-square)](https://david-dm.org/soyjavi/vanillachain-core)
-[![devDependencies Status](https://david-dm.org/soyjavi/vanillachain-core/dev-status.svg?style=flat-square)](https://david-dm.org/soyjavi/vanillachain-core?type=dev)
-[![NpmLicense](https://img.shields.io/npm/l/vanillachain.svg?style=flat-square)](https://spdx.org/licenses/MIT)
+# vanilla-blockchain
+[![npm](https://img.shields.io/npm/v/vanilla-blockchain.svg?style=flat-square)](https://www.npmjs.com/package/vanilla-blockchain)
+[![Build Status](http://img.shields.io/travis/soyjavi/vanilla-blockchain/master.svg?style=flat-square)](https://travis-ci.org/soyjavi/vanilla-blockchain)
+[![dependencies Status](https://david-dm.org/soyjavi/vanilla-blockchain/status.svg?style=flat-square)](https://david-dm.org/soyjavi/vanilla-blockchain)
+[![devDependencies Status](https://david-dm.org/soyjavi/vanilla-blockchain/dev-status.svg?style=flat-square)](https://david-dm.org/soyjavi/vanilla-blockchain?type=dev)
+[![NpmLicense](https://img.shields.io/npm/l/vanilla-blockchain.svg?style=flat-square)](https://spdx.org/licenses/MIT)
 
 > A distributed database that maintains a continuously growing list of ordered records.
 
@@ -14,7 +14,7 @@ If we look for the definition of blockchain in [Wikipedia](https://en.wikipedia.
 
 > Blockchain is a distributed database that maintains a continuously-growing list of records called blocks secured from tampering and revision.
 
-So we will work on this concept extracting the most important points that VanillaChain has to solve:
+So we will work on this concept extracting the most important points that `vanilla-blockchain` has to solve:
 
 * Use **HTTP interface** in each node to add new blocks or find them.
 * Use **Websockets** in order to communicate with the network of nodes.
