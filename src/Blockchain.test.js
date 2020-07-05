@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 
-import { decrypt } from './modules';
 import Blockchain from './Blockchain';
 
 const DEFAULT_FILE = 'vanilla-blockchain';
