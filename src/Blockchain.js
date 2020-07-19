@@ -1,4 +1,4 @@
-import Storage, { jsonAdapter } from 'vanilla-storage';
+import { AsyncStorage, Storage, AsyncJsonAdapter, JsonAdapter } from 'vanilla-storage';
 
 import { Block } from './Block';
 import { calculateHash, decrypt } from './modules';
@@ -6,46 +6,15 @@ import { calculateHash, decrypt } from './modules';
 // eslint-disable-next-line no-undef
 const state = new WeakMap();
 
-export class Blockchain {
-  constructor({
-    adapter = jsonAdapter,
-    asyncMode = false,
-    autoSave = true,
-    defaults = { blocks: [] },
-    difficulty = 1,
-    filename = 'vanilla-blockchain',
-    key = 'blocks',
-    readMode,
-    secret,
-  } = {}) {
-    // @TODO: Support async
-    const storage = new Storage({ adapter, autoSave, defaults, filename, secret });
-
-    state.set(this, { asyncMode, difficulty, readMode, storage });
-
-    try {
-      this.get(key);
-    } catch (error) {
-      if (secret) throw Error(`Blockchain ${filename} can't be decrypted`);
-      else throw Error(error);
-    }
-
-    return this;
-  }
-
+class BlockchainBase {
+  // eslint-disable-next-line no-unused-vars
   addBlock(data = {}, previousHash, fork) {
     const { latestBlock } = this;
-    const { difficulty, readMode, storage } = state.get(this);
+    const { readMode } = state.get(this);
 
     if (readMode) throw Error('Read mode only.');
     else if (previousHash !== latestBlock.hash) throw Error('The previous hash is not valid.');
     else if (fork && (!fork.hash || fork.nonce <= 0)) throw Error('Not valid fork parameters.');
-
-    // @TODO: Support async
-    const newBlock = new Block({ data, difficulty, fork, previousHash });
-    storage.push(newBlock);
-
-    return newBlock;
   }
 
   get(key) {
@@ -100,5 +69,96 @@ export class Blockchain {
     }
 
     return true;
+  }
+}
+export class Blockchain extends BlockchainBase {
+  constructor({
+    adapter = JsonAdapter,
+    autoSave = true,
+    defaults = { blocks: [] },
+    difficulty = 1,
+    filename = 'vanilla-blockchain',
+    key = 'blocks',
+    readMode,
+    secret,
+  } = {}) {
+    super();
+    const storage = new Storage({ adapter, autoSave, defaults, filename, secret });
+
+    state.set(this, { difficulty, readMode, storage });
+
+    try {
+      this.get(key);
+    } catch (error) {
+      if (secret) throw Error(`Blockchain ${filename} can't be decrypted`);
+      else throw Error(error);
+    }
+
+    return this;
+  }
+
+  addBlock(data = {}, previousHash, fork) {
+    const { latestBlock } = this;
+    const { difficulty, readMode, storage } = state.get(this);
+
+    if (readMode) throw Error('Read mode only.');
+    else if (previousHash !== latestBlock.hash) throw Error('The previous hash is not valid.');
+    else if (fork && (!fork.hash || fork.nonce <= 0)) throw Error('Not valid fork parameters.');
+
+    const newBlock = new Block({ data, difficulty, fork, previousHash });
+    storage.push(newBlock);
+
+    return newBlock;
+  }
+}
+
+export class AsyncBlockchain extends BlockchainBase {
+  constructor({
+    adapter = AsyncJsonAdapter,
+    autoSave = true,
+    defaults = { blocks: [] },
+    difficulty = 1,
+    filename = 'vanilla-blockchain',
+    key = 'blocks',
+    readMode,
+    secret,
+  } = {}) {
+    super();
+    return new Promise(async (resolve) => {
+      const storage = await new AsyncStorage({
+        adapter,
+        autoSave,
+        defaults,
+        filename,
+        secret,
+      });
+
+      state.set(this, { difficulty, readMode, storage });
+
+      try {
+        this.get(key);
+      } catch (error) {
+        if (secret) throw Error(`Blockchain ${filename} can't be decrypted`);
+        else throw Error(error);
+      }
+
+      resolve(this);
+    });
+  }
+
+  async addBlock(data = {}, previousHash, fork) {
+    const { latestBlock } = this;
+    const { difficulty, readMode, storage } = state.get(this);
+
+    if (readMode) throw Error('Read mode only.');
+    else if (previousHash !== latestBlock.hash) {
+      throw Error('The previous hash is not valid.');
+    } else if (fork && (!fork.hash || fork.nonce <= 0)) throw Error('Not valid fork parameters.');
+
+    const newBlock = new Block({ data, difficulty, fork, previousHash });
+
+    await storage.push(newBlock);
+
+    return newBlock;
   }
 }

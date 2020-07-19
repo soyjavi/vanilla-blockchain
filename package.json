@@ -23,7 +23,7 @@
   "bugs": "https://github.com/soyjavi/vanilla-blockchain/issues",
   "dependencies": {
     "crypto-js": "4.0.0",
-    "vanilla-storage": "0.3.6"
+    "vanilla-storage": "0.3.7"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.3",
@@ -40,7 +40,7 @@
   },
   "scripts": {
     "build": "babel src -d dist --ignore '**/*.test.js'",
-    "test": "yarn build && jest src --_runInBand --_collectCoverage",
+    "test": "yarn build && jest src --runInBand --collectCoverage",
     "lint": "eslint src --fix",
     "release": "release-it"
   }
