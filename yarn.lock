@@ -811,6 +811,14 @@
     "@babel/helper-create-regexp-features-plugin" "^7.10.1"
     "@babel/helper-plugin-utils" "^7.10.1"
 
+"@babel/polyfill@^7.10.4":
+  version "7.10.4"
+  resolved "https://registry.yarnpkg.com/@babel/polyfill/-/polyfill-7.10.4.tgz#915e5bfe61490ac0199008e35ca9d7d151a8e45a"
+  integrity sha512-8BYcnVqQ5kMD2HXoHInBH7H1b/uP3KdnwCYXOqFnXqguOyuu443WXusbIUbWEfY3Z0Txk0M1uG/8YuAMhNl6zg==
+  dependencies:
+    core-js "^2.6.5"
+    regenerator-runtime "^0.13.4"
+
 "@babel/preset-env@^7.10.3":
   version "7.10.3"
   resolved "https://registry.yarnpkg.com/@babel/preset-env/-/preset-env-7.10.3.tgz#3e58c9861bbd93b6a679987c7e4bd365c56c80c9"
@@ -2157,6 +2165,11 @@ core-js-compat@^3.6.2:
   dependencies:
     browserslist "^4.8.5"
     semver "7.0.0"
+
+core-js@^2.6.5:
+  version "2.6.11"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.11.tgz#38831469f9922bded8ee21c9dc46985e0399308c"
+  integrity sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
@@ -6159,10 +6172,10 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
 
-vanilla-storage@0.3.4:
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/vanilla-storage/-/vanilla-storage-0.3.4.tgz#c9bb0aceda763e7db7d97530f423145d05ddcfe8"
-  integrity sha512-WmzWA/LzEPAWmCim+9iG0KojiISudXkxGSIZUhwu0zU1c/YpbgHpj01vZVNatungKCxXD5BMIARbmkNl9fzhVw==
+vanilla-storage@0.3.6:
+  version "0.3.6"
+  resolved "https://registry.yarnpkg.com/vanilla-storage/-/vanilla-storage-0.3.6.tgz#630395648cb5b253071e4c076e06e0bda6c6a13a"
+  integrity sha512-ytFHLkSFUzHF5tepuSPqVmq5QinSm3qqdKv8Uk03iKvKjlwCU2KCOdcSmRtNtwXMRDQZ1KqYwwRWRnO70cqAag==
   dependencies:
     crypto-js "4.0.0"
 

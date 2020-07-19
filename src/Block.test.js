@@ -1,4 +1,4 @@
-import Block from './Block';
+import { Block } from './Block';
 import { decrypt } from './modules';
 
 const data = { hello: 'world', year: 1980, active: true };

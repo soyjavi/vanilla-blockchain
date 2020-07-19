@@ -1,12 +1,13 @@
 import fs from 'fs';
 import path from 'path';
+import 'regenerator-runtime/runtime';
 
-import Blockchain from './Blockchain';
+import { Blockchain } from './index';
 
 const DEFAULT_FILE = 'vanilla-blockchain';
 const DEFAULT_COIN = 'coin';
 const DEFAULT_DIFFICULTY = 1;
-const filename = 'vanilla-blockchain_2';
+const filename = 'vanilla-blockchain-2';
 const key = 'demo';
 const defaults = { blocks: [], [key]: [] };
 const difficulty = 3;
@@ -16,8 +17,8 @@ describe('Blockchain', () => {
   beforeEach(() => {
     const folder = path.resolve('.', 'store');
     if (fs.existsSync(`${folder}/vanilla-blockchain.json`)) fs.unlinkSync(`${folder}/vanilla-blockchain.json`);
-    if (fs.existsSync(`${folder}/vanilla-blockchain_2.json`)) fs.unlinkSync(`${folder}/vanilla-blockchain_2.json`);
-    if (fs.existsSync(`${folder}/vanilla-blockchain_3.json`)) fs.unlinkSync(`${folder}/vanilla-blockchain_3.json`);
+    if (fs.existsSync(`${folder}/vanilla-blockchain-2.json`)) fs.unlinkSync(`${folder}/vanilla-blockchain-2.json`);
+    if (fs.existsSync(`${folder}/vanilla-blockchain-3.json`)) fs.unlinkSync(`${folder}/vanilla-blockchain-3.json`);
   });
 
   it('default', () => {
@@ -226,7 +227,7 @@ describe('Blockchain', () => {
   });
 
   it('.wipe()', () => {
-    const filename = 'vanilla-blockchain_3';
+    const filename = 'vanilla-blockchain-3';
     let blockchain = new Blockchain({ filename });
     const { hash: genesisHash } = blockchain.latestBlock;
 

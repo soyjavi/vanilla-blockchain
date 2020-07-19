@@ -1,14 +1,15 @@
 import Storage, { jsonAdapter } from 'vanilla-storage';
 
-import Block from './Block';
+import { Block } from './Block';
 import { calculateHash, decrypt } from './modules';
 
 // eslint-disable-next-line no-undef
 const state = new WeakMap();
 
-export default class Blockchain {
+export class Blockchain {
   constructor({
     adapter = jsonAdapter,
+    asyncMode = false,
     autoSave = true,
     defaults = { blocks: [] },
     difficulty = 1,
@@ -17,9 +18,10 @@ export default class Blockchain {
     readMode,
     secret,
   } = {}) {
+    // @TODO: Support async
     const storage = new Storage({ adapter, autoSave, defaults, filename, secret });
 
-    state.set(this, { autoSave, difficulty, readMode, storage });
+    state.set(this, { asyncMode, difficulty, readMode, storage });
 
     try {
       this.get(key);
@@ -33,21 +35,15 @@ export default class Blockchain {
 
   addBlock(data = {}, previousHash, fork) {
     const { latestBlock } = this;
-    const { autoSave, difficulty, readMode, storage } = state.get(this);
+    const { difficulty, readMode, storage } = state.get(this);
 
     if (readMode) throw Error('Read mode only.');
     else if (previousHash !== latestBlock.hash) throw Error('The previous hash is not valid.');
     else if (fork && (!fork.hash || fork.nonce <= 0)) throw Error('Not valid fork parameters.');
 
-    const newBlock = new Block({
-      data,
-      difficulty,
-      fork,
-      previousHash,
-    });
-
+    // @TODO: Support async
+    const newBlock = new Block({ data, difficulty, fork, previousHash });
     storage.push(newBlock);
-    if (autoSave) this.save();
 
     return newBlock;
   }
@@ -67,15 +63,11 @@ export default class Blockchain {
   save() {
     const { storage } = state.get(this);
     storage.save();
-
-    return this;
   }
 
   wipe() {
     const { storage } = state.get(this);
-
     storage.wipe();
-    return this;
   }
 
   get blocks() {

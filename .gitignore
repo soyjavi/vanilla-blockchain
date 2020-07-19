@@ -21,4 +21,5 @@ node_modules/
 .yarn-integrity
 
 # project dynamic files
+coverage/*
 store/*.json

@@ -1,6 +1,6 @@
 import { calculateHash } from './modules';
 
-const Block = ({ data = {}, difficulty = 0, fork, previousHash, timestamp = new Date().getTime() } = {}) => {
+export const Block = ({ data = {}, difficulty = 0, fork, previousHash, timestamp = new Date().getTime() } = {}) => {
   let { nonce = 0, hash = '' } = fork || {};
 
   if (!fork || (nonce === 0 && hash === '')) {
@@ -23,5 +23,3 @@ const Block = ({ data = {}, difficulty = 0, fork, previousHash, timestamp = new 
     timestamp,
   };
 };
-
-export default Block;
