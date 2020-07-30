@@ -3,14 +3,11 @@ import { AsyncStorage, Storage, AsyncJsonAdapter, JsonAdapter } from 'vanilla-st
 import { Block } from './Block';
 import { calculateHash, decrypt } from './modules';
 
-// eslint-disable-next-line no-undef
-const state = new WeakMap();
-
 class BlockchainBase {
   // eslint-disable-next-line no-unused-vars
   addBlock(data = {}, previousHash, fork) {
     const { latestBlock } = this;
-    const { readMode } = state.get(this);
+    const { readMode } = this.state;
 
     if (readMode) throw Error('Read mode only.');
     else if (previousHash !== latestBlock.hash) throw Error('The previous hash is not valid.');
@@ -18,7 +15,7 @@ class BlockchainBase {
   }
 
   get(key) {
-    const { readMode, storage } = state.get(this);
+    const { readMode, storage } = this.state;
 
     const [genesisBlock] = storage.get(key).value || [];
     if (!genesisBlock) {
@@ -30,17 +27,17 @@ class BlockchainBase {
   }
 
   save() {
-    const { storage } = state.get(this);
+    const { storage } = this.state;
     storage.save();
   }
 
   wipe() {
-    const { storage } = state.get(this);
+    const { storage } = this.state;
     storage.wipe();
   }
 
   get blocks() {
-    const { storage } = state.get(this);
+    const { storage } = this.state;
 
     return storage.value;
   }
@@ -48,7 +45,7 @@ class BlockchainBase {
   get latestBlock() {
     const {
       storage: { value: blocks = [] },
-    } = state.get(this);
+    } = this.state;
     const block = blocks[blocks.length - 1];
 
     return block || {};
@@ -58,7 +55,7 @@ class BlockchainBase {
     const {
       storage: { value: blocks = [] },
       secret,
-    } = state.get(this);
+    } = this.state;
 
     for (let i = 1; i < blocks.length; i += 1) {
       const currentBlock = decrypt(blocks[i], secret);
@@ -85,7 +82,7 @@ export class Blockchain extends BlockchainBase {
     super();
     const storage = new Storage({ adapter, autoSave, defaults, filename, secret });
 
-    state.set(this, { difficulty, readMode, storage });
+    this.state = { difficulty, readMode, storage };
 
     try {
       this.get(key);
@@ -99,7 +96,7 @@ export class Blockchain extends BlockchainBase {
 
   addBlock(data = {}, previousHash, fork) {
     const { latestBlock } = this;
-    const { difficulty, readMode, storage } = state.get(this);
+    const { difficulty, readMode, storage } = this.state;
 
     if (readMode) throw Error('Read mode only.');
     else if (previousHash !== latestBlock.hash) throw Error('The previous hash is not valid.');
@@ -133,7 +130,7 @@ export class AsyncBlockchain extends BlockchainBase {
         secret,
       });
 
-      state.set(this, { difficulty, readMode, storage });
+      this.state = { difficulty, readMode, storage };
 
       try {
         this.get(key);
@@ -148,7 +145,7 @@ export class AsyncBlockchain extends BlockchainBase {
 
   async addBlock(data = {}, previousHash, fork) {
     const { latestBlock } = this;
-    const { difficulty, readMode, storage } = state.get(this);
+    const { difficulty, readMode, storage } = this.state;
 
     if (readMode) throw Error('Read mode only.');
     else if (previousHash !== latestBlock.hash) {

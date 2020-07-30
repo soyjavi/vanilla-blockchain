@@ -26,7 +26,7 @@ describe('AsyncBlockchain (async)', () => {
   it('default', async () => {
     const blockchain = await new AsyncBlockchain(DEFAULTS);
 
-    expect(Object.keys(blockchain)).toEqual([]);
+    expect(Object.keys(blockchain)).toEqual(['state']);
     expect(blockchain.blocks.length).toEqual(1);
     const [genesisBlock] = blockchain.blocks;
     expect(genesisBlock.data).toEqual('Genesis Block');
@@ -219,7 +219,7 @@ describe('AsyncBlockchain (async)', () => {
   });
 
   it('.wipe()', async () => {
-    const filename = 'vanilla-blockchain_3';
+    const filename = 'vanilla-blockchain-3';
     let blockchain = await new AsyncBlockchain({ ...DEFAULTS, filename });
     const { hash: genesisHash } = blockchain.latestBlock;
 

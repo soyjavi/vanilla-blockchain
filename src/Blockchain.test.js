@@ -24,7 +24,7 @@ describe('Blockchain', () => {
   it('default', () => {
     const blockchain = new Blockchain();
 
-    expect(Object.keys(blockchain)).toEqual([]);
+    expect(Object.keys(blockchain)).toEqual(['state']);
     expect(blockchain.blocks.length).toEqual(1);
     const [genesisBlock] = blockchain.blocks;
     expect(genesisBlock.data).toEqual('Genesis Block');
