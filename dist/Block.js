@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
+exports.Block = void 0;
 
 var _modules = require("./modules");
 
@@ -45,5 +45,4 @@ var Block = function Block() {
   };
 };
 
-var _default = Block;
-exports["default"] = _default;
+exports.Block = Block;

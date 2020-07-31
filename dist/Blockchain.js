@@ -1,23 +1,35 @@
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
+exports.AsyncBlockchain = exports.Blockchain = void 0;
 
-var _vanillaStorage = _interopRequireWildcard(require("vanilla-storage"));
+var _vanillaStorage = require("vanilla-storage");
 
-var _Block = _interopRequireDefault(require("./Block"));
+var _Block = require("./Block");
 
 var _modules = require("./modules");
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -37,89 +49,32 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-// eslint-disable-next-line no-undef
-var state = new WeakMap();
-
-var Blockchain = /*#__PURE__*/function () {
-  function Blockchain() {
-    var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-        _ref$adapter = _ref.adapter,
-        adapter = _ref$adapter === void 0 ? _vanillaStorage.jsonAdapter : _ref$adapter,
-        _ref$autoSave = _ref.autoSave,
-        autoSave = _ref$autoSave === void 0 ? true : _ref$autoSave,
-        _ref$defaults = _ref.defaults,
-        defaults = _ref$defaults === void 0 ? {
-      blocks: []
-    } : _ref$defaults,
-        _ref$difficulty = _ref.difficulty,
-        difficulty = _ref$difficulty === void 0 ? 1 : _ref$difficulty,
-        _ref$filename = _ref.filename,
-        filename = _ref$filename === void 0 ? 'vanilla-blockchain' : _ref$filename,
-        _ref$key = _ref.key,
-        key = _ref$key === void 0 ? 'blocks' : _ref$key,
-        readMode = _ref.readMode,
-        secret = _ref.secret;
-
-    _classCallCheck(this, Blockchain);
-
-    var storage = new _vanillaStorage["default"]({
-      adapter: adapter,
-      autoSave: autoSave,
-      defaults: defaults,
-      filename: filename,
-      secret: secret
-    });
-    state.set(this, {
-      autoSave: autoSave,
-      difficulty: difficulty,
-      readMode: readMode,
-      storage: storage
-    });
-
-    try {
-      this.get(key);
-    } catch (error) {
-      if (secret) throw Error("Blockchain ".concat(filename, " can't be decrypted"));else throw Error(error);
-    }
-
-    return this;
+var BlockchainBase = /*#__PURE__*/function () {
+  function BlockchainBase() {
+    _classCallCheck(this, BlockchainBase);
   }
 
-  _createClass(Blockchain, [{
+  _createClass(BlockchainBase, [{
     key: "addBlock",
+    // eslint-disable-next-line no-unused-vars
     value: function addBlock() {
       var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var previousHash = arguments.length > 1 ? arguments[1] : undefined;
       var fork = arguments.length > 2 ? arguments[2] : undefined;
       var latestBlock = this.latestBlock;
-
-      var _state$get = state.get(this),
-          autoSave = _state$get.autoSave,
-          difficulty = _state$get.difficulty,
-          readMode = _state$get.readMode,
-          storage = _state$get.storage;
-
+      var readMode = this.state.readMode;
       if (readMode) throw Error('Read mode only.');else if (previousHash !== latestBlock.hash) throw Error('The previous hash is not valid.');else if (fork && (!fork.hash || fork.nonce <= 0)) throw Error('Not valid fork parameters.');
-      var newBlock = new _Block["default"]({
-        data: data,
-        difficulty: difficulty,
-        fork: fork,
-        previousHash: previousHash
-      });
-      storage.push(newBlock);
-      if (autoSave) this.save();
-      return newBlock;
     }
   }, {
     key: "get",
     value: function get(key) {
-      var _state$get2 = state.get(this),
-          readMode = _state$get2.readMode,
-          storage = _state$get2.storage;
+      var _this$state = this.state,
+          readMode = _this$state.readMode,
+          storage = _this$state.storage;
 
-      var _ref2 = storage.get(key).value || [],
-          _ref3 = _slicedToArray(_ref2, 1),
-          genesisBlock = _ref3[0];
+      var _ref = storage.get(key).value || [],
+          _ref2 = _slicedToArray(_ref, 1),
+          genesisBlock = _ref2[0];
 
       if (!genesisBlock) {
         if (!readMode) this.addBlock('Genesis Block');else throw Error('Read mode only.');
@@ -130,46 +85,36 @@ var Blockchain = /*#__PURE__*/function () {
   }, {
     key: "save",
     value: function save() {
-      var _state$get3 = state.get(this),
-          storage = _state$get3.storage;
-
+      var storage = this.state.storage;
       storage.save();
-      return this;
     }
   }, {
     key: "wipe",
     value: function wipe() {
-      var _state$get4 = state.get(this),
-          storage = _state$get4.storage;
-
+      var storage = this.state.storage;
       storage.wipe();
-      return this;
     }
   }, {
     key: "blocks",
     get: function get() {
-      var _state$get5 = state.get(this),
-          storage = _state$get5.storage;
-
+      var storage = this.state.storage;
       return storage.value;
     }
   }, {
     key: "latestBlock",
     get: function get() {
-      var _state$get6 = state.get(this),
-          _state$get6$storage$v = _state$get6.storage.value,
-          blocks = _state$get6$storage$v === void 0 ? [] : _state$get6$storage$v;
-
+      var _this$state$storage$v = this.state.storage.value,
+          blocks = _this$state$storage$v === void 0 ? [] : _this$state$storage$v;
       var block = blocks[blocks.length - 1];
       return block || {};
     }
   }, {
     key: "isValidChain",
     get: function get() {
-      var _state$get7 = state.get(this),
-          _state$get7$storage$v = _state$get7.storage.value,
-          blocks = _state$get7$storage$v === void 0 ? [] : _state$get7$storage$v,
-          secret = _state$get7.secret;
+      var _this$state2 = this.state,
+          _this$state2$storage$ = _this$state2.storage.value,
+          blocks = _this$state2$storage$ === void 0 ? [] : _this$state2$storage$,
+          secret = _this$state2.secret;
 
       for (var i = 1; i < blocks.length; i += 1) {
         var currentBlock = (0, _modules.decrypt)(blocks[i], secret);
@@ -182,7 +127,256 @@ var Blockchain = /*#__PURE__*/function () {
     }
   }]);
 
-  return Blockchain;
+  return BlockchainBase;
 }();
 
-exports["default"] = Blockchain;
+var Blockchain = /*#__PURE__*/function (_BlockchainBase) {
+  _inherits(Blockchain, _BlockchainBase);
+
+  var _super = _createSuper(Blockchain);
+
+  function Blockchain() {
+    var _this;
+
+    var _ref3 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+        _ref3$adapter = _ref3.adapter,
+        adapter = _ref3$adapter === void 0 ? _vanillaStorage.JsonAdapter : _ref3$adapter,
+        _ref3$autoSave = _ref3.autoSave,
+        autoSave = _ref3$autoSave === void 0 ? true : _ref3$autoSave,
+        _ref3$defaults = _ref3.defaults,
+        defaults = _ref3$defaults === void 0 ? {
+      blocks: []
+    } : _ref3$defaults,
+        _ref3$difficulty = _ref3.difficulty,
+        difficulty = _ref3$difficulty === void 0 ? 1 : _ref3$difficulty,
+        _ref3$filename = _ref3.filename,
+        filename = _ref3$filename === void 0 ? 'vanilla-blockchain' : _ref3$filename,
+        _ref3$key = _ref3.key,
+        key = _ref3$key === void 0 ? 'blocks' : _ref3$key,
+        readMode = _ref3.readMode,
+        secret = _ref3.secret;
+
+    _classCallCheck(this, Blockchain);
+
+    _this = _super.call(this);
+    var storage = new _vanillaStorage.Storage({
+      adapter: adapter,
+      autoSave: autoSave,
+      defaults: defaults,
+      filename: filename,
+      secret: secret
+    });
+    _this.state = {
+      difficulty: difficulty,
+      readMode: readMode,
+      storage: storage
+    };
+
+    try {
+      _this.get(key);
+    } catch (error) {
+      if (secret) throw Error("Blockchain ".concat(filename, " can't be decrypted"));else throw Error(error);
+    }
+
+    return _possibleConstructorReturn(_this, _assertThisInitialized(_this));
+  }
+
+  _createClass(Blockchain, [{
+    key: "addBlock",
+    value: function addBlock() {
+      var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      var previousHash = arguments.length > 1 ? arguments[1] : undefined;
+      var fork = arguments.length > 2 ? arguments[2] : undefined;
+      var latestBlock = this.latestBlock;
+      var _this$state3 = this.state,
+          difficulty = _this$state3.difficulty,
+          readMode = _this$state3.readMode,
+          storage = _this$state3.storage;
+      if (readMode) throw Error('Read mode only.');else if (previousHash !== latestBlock.hash) throw Error('The previous hash is not valid.');else if (fork && (!fork.hash || fork.nonce <= 0)) throw Error('Not valid fork parameters.');
+      var newBlock = new _Block.Block({
+        data: data,
+        difficulty: difficulty,
+        fork: fork,
+        previousHash: previousHash
+      });
+      storage.push(newBlock);
+      return newBlock;
+    }
+  }]);
+
+  return Blockchain;
+}(BlockchainBase);
+
+exports.Blockchain = Blockchain;
+
+var AsyncBlockchain = /*#__PURE__*/function (_BlockchainBase2) {
+  _inherits(AsyncBlockchain, _BlockchainBase2);
+
+  var _super2 = _createSuper(AsyncBlockchain);
+
+  function AsyncBlockchain() {
+    var _this2;
+
+    var _ref4 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+        _ref4$adapter = _ref4.adapter,
+        adapter = _ref4$adapter === void 0 ? _vanillaStorage.AsyncJsonAdapter : _ref4$adapter,
+        _ref4$autoSave = _ref4.autoSave,
+        autoSave = _ref4$autoSave === void 0 ? true : _ref4$autoSave,
+        _ref4$defaults = _ref4.defaults,
+        defaults = _ref4$defaults === void 0 ? {
+      blocks: []
+    } : _ref4$defaults,
+        _ref4$difficulty = _ref4.difficulty,
+        difficulty = _ref4$difficulty === void 0 ? 1 : _ref4$difficulty,
+        _ref4$filename = _ref4.filename,
+        filename = _ref4$filename === void 0 ? 'vanilla-blockchain' : _ref4$filename,
+        _ref4$key = _ref4.key,
+        key = _ref4$key === void 0 ? 'blocks' : _ref4$key,
+        readMode = _ref4.readMode,
+        secret = _ref4.secret;
+
+    _classCallCheck(this, AsyncBlockchain);
+
+    _this2 = _super2.call(this);
+    return _possibleConstructorReturn(_this2, new Promise( /*#__PURE__*/function () {
+      var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(resolve) {
+        var storage;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return new _vanillaStorage.AsyncStorage({
+                  adapter: adapter,
+                  autoSave: autoSave,
+                  defaults: defaults,
+                  filename: filename,
+                  secret: secret
+                });
+
+              case 2:
+                storage = _context.sent;
+                _this2.state = {
+                  difficulty: difficulty,
+                  readMode: readMode,
+                  storage: storage
+                };
+                _context.prev = 4;
+
+                _this2.get(key);
+
+                _context.next = 15;
+                break;
+
+              case 8:
+                _context.prev = 8;
+                _context.t0 = _context["catch"](4);
+
+                if (!secret) {
+                  _context.next = 14;
+                  break;
+                }
+
+                throw Error("Blockchain ".concat(filename, " can't be decrypted"));
+
+              case 14:
+                throw Error(_context.t0);
+
+              case 15:
+                resolve(_assertThisInitialized(_this2));
+
+              case 16:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[4, 8]]);
+      }));
+
+      return function (_x) {
+        return _ref5.apply(this, arguments);
+      };
+    }()));
+  }
+
+  _createClass(AsyncBlockchain, [{
+    key: "addBlock",
+    value: function () {
+      var _addBlock = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+        var data,
+            previousHash,
+            fork,
+            latestBlock,
+            _this$state4,
+            difficulty,
+            readMode,
+            storage,
+            newBlock,
+            _args2 = arguments;
+
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                data = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : {};
+                previousHash = _args2.length > 1 ? _args2[1] : undefined;
+                fork = _args2.length > 2 ? _args2[2] : undefined;
+                latestBlock = this.latestBlock;
+                _this$state4 = this.state, difficulty = _this$state4.difficulty, readMode = _this$state4.readMode, storage = _this$state4.storage;
+
+                if (!readMode) {
+                  _context2.next = 9;
+                  break;
+                }
+
+                throw Error('Read mode only.');
+
+              case 9:
+                if (!(previousHash !== latestBlock.hash)) {
+                  _context2.next = 13;
+                  break;
+                }
+
+                throw Error('The previous hash is not valid.');
+
+              case 13:
+                if (!(fork && (!fork.hash || fork.nonce <= 0))) {
+                  _context2.next = 15;
+                  break;
+                }
+
+                throw Error('Not valid fork parameters.');
+
+              case 15:
+                newBlock = new _Block.Block({
+                  data: data,
+                  difficulty: difficulty,
+                  fork: fork,
+                  previousHash: previousHash
+                });
+                _context2.next = 18;
+                return storage.push(newBlock);
+
+              case 18:
+                return _context2.abrupt("return", newBlock);
+
+              case 19:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function addBlock() {
+        return _addBlock.apply(this, arguments);
+      }
+
+      return addBlock;
+    }()
+  }]);
+
+  return AsyncBlockchain;
+}(BlockchainBase);
+
+exports.AsyncBlockchain = AsyncBlockchain;
