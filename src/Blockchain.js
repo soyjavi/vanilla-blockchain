@@ -1,17 +1,16 @@
-import { AsyncStorage, Storage, AsyncJsonAdapter, JsonAdapter } from 'vanilla-storage';
-
 import { Block } from './Block';
 import { calculateHash, decrypt } from './modules';
 
-class BlockchainBase {
-  // eslint-disable-next-line no-unused-vars
-  addBlock(data = {}, previousHash, fork) {
+export class Blockchain {
+  addBlock(data, previousHash, fork) {
     const { latestBlock } = this;
-    const { readMode } = this.state;
+    const { difficulty, readMode } = this.state;
 
     if (readMode) throw Error('Read mode only.');
     else if (previousHash !== latestBlock.hash) throw Error('The previous hash is not valid.');
     else if (fork && (!fork.hash || fork.nonce <= 0)) throw Error('Not valid fork parameters.');
+
+    return new Block({ data, difficulty, fork, previousHash });
   }
 
   get(key) {
@@ -66,96 +65,5 @@ class BlockchainBase {
     }
 
     return true;
-  }
-}
-export class Blockchain extends BlockchainBase {
-  constructor({
-    adapter = JsonAdapter,
-    autoSave = true,
-    defaults = { blocks: [] },
-    difficulty = 1,
-    filename = 'vanilla-blockchain',
-    key = 'blocks',
-    readMode,
-    secret,
-  } = {}) {
-    super();
-    const storage = new Storage({ adapter, autoSave, defaults, filename, secret });
-
-    this.state = { difficulty, readMode, storage };
-
-    try {
-      this.get(key);
-    } catch (error) {
-      if (secret) throw Error(`Blockchain ${filename} can't be decrypted`);
-      else throw Error(error);
-    }
-
-    return this;
-  }
-
-  addBlock(data = {}, previousHash, fork) {
-    const { latestBlock } = this;
-    const { difficulty, readMode, storage } = this.state;
-
-    if (readMode) throw Error('Read mode only.');
-    else if (previousHash !== latestBlock.hash) throw Error('The previous hash is not valid.');
-    else if (fork && (!fork.hash || fork.nonce <= 0)) throw Error('Not valid fork parameters.');
-
-    const newBlock = new Block({ data, difficulty, fork, previousHash });
-    storage.push(newBlock);
-
-    return newBlock;
-  }
-}
-
-export class AsyncBlockchain extends BlockchainBase {
-  constructor({
-    adapter = AsyncJsonAdapter,
-    autoSave = true,
-    defaults = { blocks: [] },
-    difficulty = 1,
-    filename = 'vanilla-blockchain',
-    key = 'blocks',
-    readMode,
-    secret,
-  } = {}) {
-    super();
-    return new Promise(async (resolve) => {
-      const storage = await new AsyncStorage({
-        adapter,
-        autoSave,
-        defaults,
-        filename,
-        secret,
-      });
-
-      this.state = { difficulty, readMode, storage };
-
-      try {
-        this.get(key);
-      } catch (error) {
-        if (secret) throw Error(`Blockchain ${filename} can't be decrypted`);
-        else throw Error(error);
-      }
-
-      resolve(this);
-    });
-  }
-
-  async addBlock(data = {}, previousHash, fork) {
-    const { latestBlock } = this;
-    const { difficulty, readMode, storage } = this.state;
-
-    if (readMode) throw Error('Read mode only.');
-    else if (previousHash !== latestBlock.hash) {
-      throw Error('The previous hash is not valid.');
-    } else if (fork && (!fork.hash || fork.nonce <= 0)) throw Error('Not valid fork parameters.');
-
-    const newBlock = new Block({ data, difficulty, fork, previousHash });
-
-    await storage.push(newBlock);
-
-    return newBlock;
   }
 }

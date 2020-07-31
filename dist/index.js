@@ -3,18 +3,6 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-Object.defineProperty(exports, "Blockchain", {
-  enumerable: true,
-  get: function get() {
-    return _Blockchain.Blockchain;
-  }
-});
-Object.defineProperty(exports, "AsyncBlockchain", {
-  enumerable: true,
-  get: function get() {
-    return _Blockchain.AsyncBlockchain;
-  }
-});
 Object.defineProperty(exports, "AsyncJsonAdapter", {
   enumerable: true,
   get: function get() {
@@ -39,7 +27,21 @@ Object.defineProperty(exports, "StorageAdapter", {
     return _vanillaStorage.StorageAdapter;
   }
 });
-
-var _Blockchain = require("./Blockchain");
+Object.defineProperty(exports, "Blockchain", {
+  enumerable: true,
+  get: function get() {
+    return _Blockchain.Blockchain;
+  }
+});
+Object.defineProperty(exports, "AsyncBlockchain", {
+  enumerable: true,
+  get: function get() {
+    return _Blockchain2.AsyncBlockchain;
+  }
+});
 
 var _vanillaStorage = require("vanilla-storage");
+
+var _Blockchain = require("./Blockchain.sync");
+
+var _Blockchain2 = require("./Blockchain.async");
