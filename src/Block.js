@@ -1,7 +1,13 @@
 import { calculateHash } from './modules';
 
-export const Block = ({ data = {}, difficulty = 0, fork, previousHash, timestamp = new Date().getTime() } = {}) => {
-  let { nonce = 0, hash = '' } = fork || {};
+export const Block = ({
+  data = {},
+  difficulty = 0,
+  fork = {},
+  previousHash,
+  timestamp = new Date().getTime(),
+} = {}) => {
+  let { nonce = 0, hash = '' } = fork;
 
   if (!fork || (nonce === 0 && hash === '')) {
     while (hash.substring(0, difficulty) !== Array(difficulty + 1).join('0')) {
@@ -10,7 +16,7 @@ export const Block = ({ data = {}, difficulty = 0, fork, previousHash, timestamp
         data,
         nonce,
         previousHash,
-        timestamp,
+        timestamp: fork.timestamp || timestamp,
       });
     }
   }
@@ -20,6 +26,6 @@ export const Block = ({ data = {}, difficulty = 0, fork, previousHash, timestamp
     hash,
     nonce,
     previousHash,
-    timestamp,
+    timestamp: fork.timestamp || timestamp,
   };
 };

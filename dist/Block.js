@@ -13,16 +13,16 @@ var Block = function Block() {
       data = _ref$data === void 0 ? {} : _ref$data,
       _ref$difficulty = _ref.difficulty,
       difficulty = _ref$difficulty === void 0 ? 0 : _ref$difficulty,
-      fork = _ref.fork,
+      _ref$fork = _ref.fork,
+      fork = _ref$fork === void 0 ? {} : _ref$fork,
       previousHash = _ref.previousHash,
       _ref$timestamp = _ref.timestamp,
       timestamp = _ref$timestamp === void 0 ? new Date().getTime() : _ref$timestamp;
 
-  var _ref2 = fork || {},
-      _ref2$nonce = _ref2.nonce,
-      nonce = _ref2$nonce === void 0 ? 0 : _ref2$nonce,
-      _ref2$hash = _ref2.hash,
-      hash = _ref2$hash === void 0 ? '' : _ref2$hash;
+  var _fork$nonce = fork.nonce,
+      nonce = _fork$nonce === void 0 ? 0 : _fork$nonce,
+      _fork$hash = fork.hash,
+      hash = _fork$hash === void 0 ? '' : _fork$hash;
 
   if (!fork || nonce === 0 && hash === '') {
     while (hash.substring(0, difficulty) !== Array(difficulty + 1).join('0')) {
@@ -31,7 +31,7 @@ var Block = function Block() {
         data: data,
         nonce: nonce,
         previousHash: previousHash,
-        timestamp: timestamp
+        timestamp: fork.timestamp || timestamp
       });
     }
   }
@@ -41,7 +41,7 @@ var Block = function Block() {
     hash: hash,
     nonce: nonce,
     previousHash: previousHash,
-    timestamp: timestamp
+    timestamp: fork.timestamp || timestamp
   };
 };
 
