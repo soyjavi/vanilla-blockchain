@@ -23,7 +23,7 @@
   "bugs": "https://github.com/soyjavi/vanilla-blockchain/issues",
   "dependencies": {
     "crypto-js": "4.0.0",
-    "vanilla-storage": "0.3.7"
+    "vanilla-storage": "0.3.11"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.3",
