@@ -6172,10 +6172,10 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
 
-vanilla-storage@0.3.13:
-  version "0.3.13"
-  resolved "https://registry.yarnpkg.com/vanilla-storage/-/vanilla-storage-0.3.13.tgz#26dc870c471054c663aaa026f5e8179f85fb5c65"
-  integrity sha512-Qg4ul2ox5X71lupdFFgTnMRP/qHbAsNgMmZWv188+FS2nNznIUBH3uNMMHtj8oYp8w9a5uD25YXUmfueHRkRSA==
+vanilla-storage@^0.3:
+  version "0.3.15"
+  resolved "https://registry.yarnpkg.com/vanilla-storage/-/vanilla-storage-0.3.15.tgz#9d53c2928ead79c73ec88e48c5e17b86535b18b9"
+  integrity sha512-kwTRlLP4la1qncqo3PUv4yS3FcDHvSWow2wzA5DLUP7sl/xvNNlBnqV49kOkL9UZ5kbNWcQy90G13Iw5rGQ5UQ==
   dependencies:
     crypto-js "4.0.0"
 

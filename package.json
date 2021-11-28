@@ -1,6 +1,6 @@
 {
   "name": "vanilla-blockchain",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "description": "🍦A distributed database that maintains a continuously growing list of ordered records.",
   "keywords": [
     "blockchain",
@@ -23,7 +23,7 @@
   "bugs": "https://github.com/soyjavi/vanilla-blockchain/issues",
   "dependencies": {
     "crypto-js": "4.0.0",
-    "vanilla-storage": "0.3.13"
+    "vanilla-storage": "^0.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.3",
